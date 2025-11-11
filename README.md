@@ -15,11 +15,11 @@ Its primary responsibilities are:
 
 ### Technology Stack
 
-* **Framework:** Node.js (with Express, NestJS, or similar)
-* **Language:** TypeScript
+* **Framework:** Spring Boot
+* **Language:** Java
 * **Notifications:** Firebase Admin SDK
-* **Storage:** IPFS (or other blob storage) integration
-* **Database:** MongoDB / Postgres (for user metadata, notification tokens, etc.)
+* **Storage:** IPFS (Azurite Docker Image) integration
+* **Database:** Postgres (for user metadata, notification tokens, etc.)
 
 ### Core MVP Endpoints
 
