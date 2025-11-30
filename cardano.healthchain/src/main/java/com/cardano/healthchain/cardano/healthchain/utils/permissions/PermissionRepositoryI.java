@@ -6,9 +6,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public interface PermissionRepositoryI {
-    ArrayList<PermissionResponse> getPermittedClinicsForUser(String userId);
+    ArrayList<PermissionResponse> getPermittedClinicsForUser(String user_email, int page);
+    ArrayList<PermissionResponse> getRequestedPermissionsByClinic(String clinicId, int page);
+    void deletePermissionRequestByClinic(String user_email, String clinicId);
+    void permitClinic(String clinicId, String userId, Instant Expires);
 
-    PermissionResponse permitClinic(String clinicId, String userId, Instant Expires);
-
-    void revokeClinicPermission(String clinicId);
+    void revokeClinicPermissionForUser(String clinicId, String email);
 }

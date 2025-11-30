@@ -3,32 +3,36 @@ package com.cardano.healthchain.cardano.healthchain.utils.permissions;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionResponse;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 
 @Service
 public class PermissionService {
     private final PermissionRepositoryI permissionRepository;
+
     public PermissionService(PermissionRepositoryI permissionRepository) {
         this.permissionRepository = permissionRepository;
     }
-    public ArrayList<PermissionResponse> getPermittedClinicsForUser(String userId) {
-        return permissionRepository.getPermittedClinicsForUser(userId);
+
+    public ArrayList<PermissionResponse> getPermittedClinicsForUser(String user_email, int page) {
+        return permissionRepository.getPermittedClinicsForUser(user_email, page);
     }
 
-    public PermissionResponse permitClinic(String clinicId, String userId, String expiresIn) {
-        return permissionRepository.permitClinic(clinicId, userId, parseExpiresOption(expiresIn));
-    }
-    public Instant parseExpiresOption(String expiresIn){
-        return Instant.now().plus(200L, ChronoUnit.DAYS);
+    public ArrayList<PermissionResponse> getRequestedPermissionsByClinic(String clinicId, int page) {
+        return permissionRepository.getRequestedPermissionsByClinic(clinicId, page);
     }
 
-    public boolean revokeClinicPermission(String clinicId) {
-        permissionRepository.revokeClinicPermission(clinicId);
+    public boolean permitClinic(String clinicId, String email) {
+        permissionRepository.permitClinic(clinicId, email, Instant.now().plus(1, ChronoUnit.DAYS));
+        return true;
+    }
+    public boolean revokeClinicPermissionForUser(String clinicId, String email) {
+        permissionRepository.revokeClinicPermissionForUser(clinicId, email);
+        return true;
+    }
+    public boolean deletePermissionRequestByClinic(String user_email, String clinicId) {
+        permissionRepository.deletePermissionRequestByClinic(user_email,clinicId);
         return true;
     }
 }

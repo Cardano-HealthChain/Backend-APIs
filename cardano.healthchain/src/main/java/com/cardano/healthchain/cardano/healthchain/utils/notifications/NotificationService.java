@@ -11,11 +11,11 @@ public class NotificationService {
     public NotificationService(NotificationRepositoryImpl notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
-    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String category, String userId) {
-        return notificationRepository.getNotificationsForUser(page, category, userId);
+    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String category, String user_email) {
+        return notificationRepository.getNotificationsForUser(page, category, user_email);
     }
 
-    public boolean markNotificationAsRead(String notificationId) {
-        return notificationRepository.markNotificationAsRead(notificationId);
+    public void markNotificationAsRead(String notificationId) {
+        notificationRepository.markNotificationAsRead(notificationId);
     }
 }

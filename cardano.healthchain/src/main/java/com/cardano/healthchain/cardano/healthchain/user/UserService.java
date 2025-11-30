@@ -21,21 +21,17 @@ public class UserService {
         otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(4));
         return createdUser;
     }
-    public boolean updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
+    public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
         userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetails, email);
-        return true;
     }
-    public boolean updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
+    public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
         userRepository.updateUserProfileHealthInformation(userUpdateProfileHealthInformation, email);
-        return true;
     }
-    public boolean updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
+    public void updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
         userRepository.updateUserProfileEmergencyContact(userUpdateEmergencyInformation, email);
-        return true;
     }
-    public boolean updateUserProfileWithLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
+    public void updateUserProfileWithLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
         userRepository.updateUserProfileLocationData(userUpdateLocationData,email);
-        return true;
     }
     public UserCreateResponse validateUserOtp(String otpcode, String email) {
         otpService.checkOTPValidity(otpcode, email);

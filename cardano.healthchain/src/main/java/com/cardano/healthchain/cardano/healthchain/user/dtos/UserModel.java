@@ -28,4 +28,5 @@ public class UserModel {
     private String stateOfOrigin;
     private LocalDateTime createdAt;
     private boolean verified;
+    private String role;
 }

@@ -2,6 +2,7 @@ package com.cardano.healthchain.cardano.healthchain.utils.otp;
 
 import com.cardano.healthchain.cardano.healthchain.exceptions.OtpException;
 import com.cardano.healthchain.cardano.healthchain.utils.MailService;
+import com.cardano.healthchain.cardano.healthchain.utils.otp.dtos.OtpResponse;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -26,9 +27,9 @@ public class OtpService {
     }
     public void checkOTPValidity(String otpcode, String user_email){
         OtpResponse otpByCode = otpRepository.getOtpByCodeAndEmail(otpcode, user_email);
-        if(otpByCode.getExpires_at().isBefore(LocalDateTime.now()) ){
+        if(otpByCode.getExpiresAt().isBefore(LocalDateTime.now()) ){
             throw new OtpException("OTP Expired");
-        } else if (!otpByCode.getUser_id().equals(user_email)) {
+        } else if (!otpByCode.getEmail().equals(user_email)) {
             throw new OtpException("Invalid OTP");
         }
     }

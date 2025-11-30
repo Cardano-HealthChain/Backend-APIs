@@ -5,10 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
 public class PermissionResponse {
-    public String clinicId;
-    public PermissionAccessScopes permissionAccessScopes;
+    private String permissions_id;
+    private String clinic_name;
+    private String clinic_id;
+    private String access_type;
+    private boolean granted;
+    private boolean revoked;
+    private LocalDateTime granted_at;
+    private LocalDateTime revoked_at;
 }

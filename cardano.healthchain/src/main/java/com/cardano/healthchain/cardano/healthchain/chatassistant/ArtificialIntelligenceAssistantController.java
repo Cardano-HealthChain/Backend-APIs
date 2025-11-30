@@ -1,5 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.chatassistant;
 
+import com.cardano.healthchain.cardano.healthchain.chatassistant.dros.ArtificialIntelligenceDTORequest;
+import com.cardano.healthchain.cardano.healthchain.chatassistant.dros.ArtificialIntelligenceDTOResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -5,7 +5,7 @@ import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.Noti
 import java.util.ArrayList;
 
 public interface NotificationRepositoryI {
-    ArrayList<NotificationResponse> getNotificationsForUser(int page, String category, String userId);
+    ArrayList<NotificationResponse> getNotificationsForUser(int page, String category, String user_email);
 
-    boolean markNotificationAsRead(String notificationId);
+    void markNotificationAsRead(String notificationId);
 }

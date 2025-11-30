@@ -15,9 +15,9 @@ public class MedicalDataResponse {
     private String record_type;
     private String record_data;
     private String patientName;
+    private String hash_local;
     private String blockchainTransactionID;
     private boolean verified = true;
     private String uploaded_by; // reflects clinic name in DB
     private LocalDate created_at;
-    private String hash_local;
 }

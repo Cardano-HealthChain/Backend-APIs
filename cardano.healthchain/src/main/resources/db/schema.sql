@@ -25,17 +25,18 @@ CREATE TABLE users (
     created_at                  TIMESTAMP DEFAULT NOW(),
     -- Changed after using otp to verify account
     verified                    BOOLEAN
+    role                        text default RESIDENT
 );
 CREATE TABLE otp_codes (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    otp_id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email               VARCHAR(255) NOT NULL,
     otp_code            VARCHAR(10),
     created_at          TIMESTAMP DEFAULT NOW()
     expires_at          TIMESTAMP NOT NULL
-    used            BOOLEAN
+    used                BOOLEAN DEFAULT FALSE
 );
 CREATE TABLE clinics (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clinic_id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     clinic_name         VARCHAR(255) NOT NULL,
     address             TEXT,
     contact_email       VARCHAR(255),
@@ -44,8 +45,8 @@ CREATE TABLE clinics (
     license_no          TEXT
 );
 CREATE TABLE medical_records (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    record_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_email             UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,
 
     record_type         VARCHAR(100),         -- e.g., Lab Result, Immunization
     record_data         TEXT NOT NULL,
@@ -55,22 +56,26 @@ CREATE TABLE medical_records (
     created_at          TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE permissions (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    permissions_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email               UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,
     clinic_id           UUID NOT NULL REFERENCES clinics(id) ON DELETE CASCADE,
 
     access_type         VARCHAR(50) NOT NULL,
-    granted_at          TIMESTAMP DEFAULT NOW(),
+    granted_at          TIMESTAMP,
+    expires_at          TIMESTAMP
+    granted             BOOLEAN DEFAULT FALSE,
     revoked             BOOLEAN DEFAULT FALSE,
     revoked_at          TIMESTAMP
+    expires_at          TIMESTAMP
 );
 CREATE TABLE notifications (
-    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    notification_id     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_email          TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
 
     title               VARCHAR(255) NOT NULL,
     message             TEXT NOT NULL,
-    category            VARCHAR(100),
+    notification_level  VARCHAR(100),
+    notification_type   VARCHAR(100),
 
     sent_at             TIMESTAMP DEFAULT NOW(),
     read_status         BOOLEAN DEFAULT FALSE
