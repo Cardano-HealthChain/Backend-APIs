@@ -8,6 +8,6 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 public class UserCreateResponse {
-    private UUID userId;
+    private String user_email;
     private String token;
 }

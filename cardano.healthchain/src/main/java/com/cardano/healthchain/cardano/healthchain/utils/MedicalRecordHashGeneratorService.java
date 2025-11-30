@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MedicalRecordHashGeneratorService {
-    public byte[] generateHashAndReturn(MedicalDataResponse medicalRecordForUser) {
+    public String generateHashAndReturn(MedicalDataResponse medicalRecordForUser) {
         // create a hashing algorithm
         return "random".getBytes();
     }

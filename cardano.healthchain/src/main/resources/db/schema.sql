@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     -- Signup Captured Details
     email                       VARCHAR(255) UNIQUE NOT NULL,
     hashed_password             TEXT NOT NULL,
@@ -23,8 +23,17 @@ CREATE TABLE users (
     state_of_origin             VARCHAR(100),
 
     created_at                  TIMESTAMP DEFAULT NOW(),
+    -- Changed after using otp to verify account
+    verified                    BOOLEAN
 );
-
+CREATE TABLE otp_codes (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email               VARCHAR(255) NOT NULL,
+    otp_code            VARCHAR(10),
+    created_at          TIMESTAMP DEFAULT NOW()
+    expires_at          TIMESTAMP NOT NULL
+    used            BOOLEAN
+);
 CREATE TABLE clinics (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     clinic_name         VARCHAR(255) NOT NULL,
@@ -34,16 +43,17 @@ CREATE TABLE clinics (
     verified            BOOLEAN
     license_no          TEXT
 );
-    CREATE TABLE medical_records (
-        id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+CREATE TABLE medical_records (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
-        record_type         VARCHAR(100),         -- e.g., Lab Result, Immunization
-        record_data         TEXT NOT NULL,
-        hash_local          TEXT NOT NULL,        -- Hash of record stored in DB
-        blockchain_tx_id    TEXT,
-        created_at          TIMESTAMP DEFAULT NOW()
-    );
+    record_type         VARCHAR(100),         -- e.g., Lab Result, Immunization
+    record_data         TEXT NOT NULL,
+    clinic_name         VARCHAR(100),         -- e.g., Lab Result, Immunization
+    hash_local          TEXT NOT NULL,        -- Hash of record stored in DB
+    blockchain_tx_id    TEXT,
+    created_at          TIMESTAMP DEFAULT NOW()
+);
 CREATE TABLE permissions (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,

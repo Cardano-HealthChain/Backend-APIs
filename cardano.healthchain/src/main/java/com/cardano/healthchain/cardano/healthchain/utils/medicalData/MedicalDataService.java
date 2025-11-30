@@ -5,6 +5,8 @@ import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainSe
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class MedicalDataService {
     private final MedicalDataRepositoryI medicalDataRepository;
@@ -13,16 +15,17 @@ public class MedicalDataService {
         this.medicalDataRepository = medicalDataRepositoryI;
         this.blockChainService = blockChainService;
     }
-
-    public MedicalDataResponse verifyAndGetMedicalRecordForUser(int page, String userId) {
-        MedicalDataResponse medicalRecordForUser = medicalDataRepository.getMedicalRecordForUser(page, userId);
-        blockChainService.verifyRecordHash(medicalRecordForUser);
-        return medicalRecordForUser;
+    public MedicalDataResponse getMedicalRecordById(String record_id){
+        return medicalDataRepository.getMedicalRecordById(record_id);
     }
-
-    public MedicalDataResponse verifyAndGetMedicalRecordForUserFiltered(int page, String userId, String category) {
-        MedicalDataResponse medicalRecordForUser = medicalDataRepository.getMedicalRecordForUserFiltered(page, userId, category);
-        blockChainService.verifyRecordHash(medicalRecordForUser);
-        return medicalRecordForUser;
+    public ArrayList<MedicalDataResponse> verifyAndGetMedicalRecordsForUser(int page, String email) {
+        ArrayList<MedicalDataResponse> medicalRecordsForUser = medicalDataRepository.getMedicalRecordsForUser(page, email);
+        blockChainService.verifyMultipleRecordset(medicalRecordsForUser);
+        return medicalRecordsForUser;
+    }
+    public ArrayList<MedicalDataResponse> verifyAndGetMedicalRecordsForUserFiltered(int page, String email, String category) {
+        ArrayList<MedicalDataResponse> medicalRecordsForUser = medicalDataRepository.getMedicalRecordsForUserFiltered(page, email, category);
+        blockChainService.verifyMultipleRecordset(medicalRecordsForUser);
+        return medicalRecordsForUser;
     }
 }

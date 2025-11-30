@@ -2,8 +2,12 @@ package com.cardano.healthchain.cardano.healthchain.utils.medicalData;
 
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 
-public interface MedicalDataRepositoryI {
-    MedicalDataResponse getMedicalRecordForUser(int page, String userId);
+import java.util.ArrayList;
 
-    MedicalDataResponse getMedicalRecordForUserFiltered(int page, String userId, String category);
+public interface MedicalDataRepositoryI {
+    ArrayList<MedicalDataResponse> getMedicalRecordsForUser(int page, String email);
+
+    ArrayList<MedicalDataResponse> getMedicalRecordsForUserFiltered(int page, String email, String category);
+
+    MedicalDataResponse getMedicalRecordById(String recordId);
 }

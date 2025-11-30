@@ -35,21 +35,29 @@ public class UserController {
     public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
         return userService.createUser(userCreateRequest);
     }
+    @PostMapping("otp/validate")
+    public UserCreateResponse validateUserOtp(@RequestParam String otpcode, @RequestParam String user_email){
+        return userService.validateUserOtp(otpcode, user_email);
+    }
     @PostMapping("profile/personal_details")
     public boolean updateUserProfileWithPersonalDetails(@Valid @RequestBody UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails){
-        return userService.updateUserProfileWithPersonalDetails(userUpdateProfilePersonalDetails);
+        String userId = "random";
+        return userService.updateUserProfileWithPersonalDetails(userUpdateProfilePersonalDetails,userId);
     }
     @PostMapping("profile/basic_health_information")
     public boolean updateUserProfileWithHealthInformation(@Valid @RequestBody UserUpdateProfileHealthInformation userUpdateProfileHealthInformation){
-        return userService.updateUserProfileWithHealthInformation(userUpdateProfileHealthInformation);
+        String userId = "random";
+        return userService.updateUserProfileWithHealthInformation(userUpdateProfileHealthInformation,userId);
     }
-    @PostMapping("profile/emergencyContact")
+    @PostMapping("profile/emergency_contact")
     public boolean updateUserProfileWithEmergencyContact(@Valid @RequestBody UserUpdateEmergencyInformation userUpdateEmergencyInformation){
-        return userService.updateUserProfileWithEmergencyContact(userUpdateEmergencyInformation);
+        String userId = "random";
+        return userService.updateUserProfileWithEmergencyContact(userUpdateEmergencyInformation,userId);
     }
     @PostMapping("profile/location")
     public boolean updateUserProfileWithLocationData(@Valid @RequestBody UserUpdateLocationData userUpdateLocationData){
-        return userService.updateUserProfileWithLocationData(userUpdateLocationData);
+        String userId = "random";
+        return userService.updateUserProfileWithLocationData(userUpdateLocationData,userId);
     }
     @PostMapping("wallet/connect")
     public WalletConnectionStatus connectUserWallet(@RequestBody WalletConnectionRequest walletConnectionRequest){
@@ -57,16 +65,23 @@ public class UserController {
         String userId = "random";
         return walletService.connectWallet(walletConnectionRequest, userId);
     }
-    @GetMapping("/records")
-    public MedicalDataResponse getMedicalRecordPerPageForUser(@RequestParam int page) {
+    @GetMapping("/record")
+    public MedicalDataResponse getMedicalRecordById(@RequestParam String record_id) {
         //get userId from authentication object;
-        String userId = "random";
-        return medicalDataService.verifyAndGetMedicalRecordForUser(page,userId);
+        return medicalDataService.getMedicalRecordById(record_id);
     }
-    public MedicalDataResponse getMedicalRecordPerPageForUserFiltered(@RequestParam int page, @RequestParam String category) {
+    @GetMapping("/records")
+    public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(@RequestParam int page) {
         //get userId from authentication object;
-        String userId = "random";
-        return medicalDataService.verifyAndGetMedicalRecordForUserFiltered(page,userId, category);
+        String email = "random";
+        return medicalDataService.verifyAndGetMedicalRecordsForUser(page,email);
+
+    }
+    @GetMapping("/records/filtered")
+    public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(@RequestParam int page, @RequestParam String category) {
+        //get userId from authentication object;
+        String email = "random";
+        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,email, category);
     }
     @GetMapping("permissions")
     public ArrayList<PermissionResponse> getPermittedClinicsForUser(){
@@ -75,8 +90,8 @@ public class UserController {
     }
     @PostMapping("permissions/grant")
     public PermissionResponse grantPermission(@RequestParam String clinicId, @RequestParam String expiresIn){
-        String userId = "";
-        return permissionService.permitClinic(clinicId, userId, expiresIn);
+        String email = "";
+        return permissionService.permitClinic(clinicId, email, expiresIn);
     }
     @PostMapping("permissions/revoke")
     public boolean revokePermission(@RequestParam String clinicId){
