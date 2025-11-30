@@ -1,8 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.auth;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +11,13 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-    @PostMapping("did-init")
-    public AuthDTOResponse createDecentralizedIdentifier(@Valid @RequestBody AuthDTORequest authDTORequest){
-        return null;
+
+    @PostMapping("login")
+    public void login(){
+
+    }
+    @PostMapping("refreshToken")
+    public void tokenRefresh(){
+
     }
 }

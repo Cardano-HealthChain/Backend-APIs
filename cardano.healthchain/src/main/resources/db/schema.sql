@@ -1,43 +1,90 @@
-CREATE TABLE dids (
-    id SERIAL PRIMARY KEY,
-    did VARCHAR(100) UNIQUE NOT NULL,
-    user_name VARCHAR(255) NOT NULL,
-    region VARCHAR(50),
-    public_key VARCHAR(512),
-    created_at TIMESTAMP DEFAULT NOW()
+CREATE TABLE users (
+    id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    -- Signup Captured Details
+    email                       VARCHAR(255) UNIQUE NOT NULL,
+    hashed_password             TEXT NOT NULL,
+    first_name                  VARCHAR(255),
+    last_name                   VARCHAR(255),
+    phone_number                VARCHAR(50),
+    dob                         DATE,
+    -- Profile completion basic health information
+    gender                      VARCHAR(20),
+    address                     TEXT,
+    blood_type                  TEXT,
+    genotype                    TEXT,
+    known_allergies             TEXT,
+    pre_existing_conditions     TEXT,
+    -- Emergency contact information
+    emergency_contact_name      TEXT,
+    emergency_contact_phone     TEXT,
+    emergency_contact_rel       TEXT,
+    -- Profile completion location details
+    nationality                 VARCHAR(100),
+    state_of_origin             VARCHAR(100),
+
+    created_at                  TIMESTAMP DEFAULT NOW(),
 );
-CREATE TABLE record_hashes (
-    id SERIAL PRIMARY KEY,
-    did_id INT REFERENCES dids(id) ON DELETE CASCADE,
-    latest_record_hash VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP DEFAULT NOW()
+
+CREATE TABLE clinics (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clinic_name         VARCHAR(255) NOT NULL,
+    address             TEXT,
+    contact_email       VARCHAR(255),
+    created_at          TIMESTAMP DEFAULT NOW()
+    verified            BOOLEAN
+    license_no          TEXT
 );
-CREATE TABLE vaccination_credentials (
-    id SERIAL PRIMARY KEY,
-    transaction_id VARCHAR(255) UNIQUE NOT NULL,
-    user_did_id INT REFERENCES dids(id) ON DELETE CASCADE,
-    clinic_id VARCHAR(100),
-    vaccine_type VARCHAR(50),
-    dose INT,
-    issued_at TIMESTAMP DEFAULT NOW()
+    CREATE TABLE medical_records (
+        id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+        record_type         VARCHAR(100),         -- e.g., Lab Result, Immunization
+        record_data         TEXT NOT NULL,
+        hash_local          TEXT NOT NULL,        -- Hash of record stored in DB
+        blockchain_tx_id    TEXT,
+        created_at          TIMESTAMP DEFAULT NOW()
+    );
+CREATE TABLE permissions (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    clinic_id           UUID NOT NULL REFERENCES clinics(id) ON DELETE CASCADE,
+
+    access_type         VARCHAR(50) NOT NULL,
+    granted_at          TIMESTAMP DEFAULT NOW(),
+    revoked             BOOLEAN DEFAULT FALSE,
+    revoked_at          TIMESTAMP
 );
-CREATE TABLE alerts (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    category VARCHAR(50),
-    region VARCHAR(50),
-    recipients INT DEFAULT 0,
-    status VARCHAR(50),
-    sent_at TIMESTAMP DEFAULT NOW()
+CREATE TABLE notifications (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    title               VARCHAR(255) NOT NULL,
+    message             TEXT NOT NULL,
+    category            VARCHAR(100),
+
+    sent_at             TIMESTAMP DEFAULT NOW(),
+    read_status         BOOLEAN DEFAULT FALSE
 );
-CREATE TABLE dashboard_metrics (
-    id SERIAL PRIMARY KEY,
-    total_dids INT DEFAULT 0,
-    total_vcs_issued INT DEFAULT 0,
-    last_updated TIMESTAMP DEFAULT NOW()
+CREATE TABLE firebase_device_tokens (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    device_token        TEXT NOT NULL,
+    created_at          TIMESTAMP DEFAULT NOW(),
+    UNIQUE (device_token)
 );
-CREATE INDEX idx_did_did ON dids(did);
-CREATE INDEX idx_vc_user_did ON vaccination_credentials(user_did_id);
-CREATE INDEX idx_alert_region ON alerts(region);
-CREATE INDEX idx_record_did ON record_hashes(did_id);
+CREATE TABLE notification_fanout_log (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    notification_id     UUID REFERENCES notifications(id) ON DELETE CASCADE,
+    device_token        TEXT,
+    status              VARCHAR(50),         -- success / failed
+    error_message       TEXT,
+    sent_at             TIMESTAMP DEFAULT NOW()
+);
+CREATE TABLE audit_logs (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    user_id             UUID REFERENCES users(id),
+    action              VARCHAR(255) NOT NULL,
+    details             JSONB,
+    created_at          TIMESTAMP DEFAULT NOW()
+);
