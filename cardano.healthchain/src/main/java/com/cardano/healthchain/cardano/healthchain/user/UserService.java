@@ -27,12 +27,12 @@ public class UserService {
     @Transactional
     public String createUser(UserCreateRequest userCreateRequest) {
         if(this.checkIfUserHasPendingAccount(userCreateRequest.getEmail())){
-            otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(4));
+            otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(6));
             throw new PendingUserException("Email has already been used but not verified, OTP resent!");
         };
         userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
         userRepository.createUser(userCreateRequest);
-        otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(4));
+        otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(6));
         logger.info(String.format("User with email: %s created, otp sent for verification",userCreateRequest.getEmail()));
         return String.format("OTP was sent to: %s for verification",userCreateRequest.getEmail());
     }
