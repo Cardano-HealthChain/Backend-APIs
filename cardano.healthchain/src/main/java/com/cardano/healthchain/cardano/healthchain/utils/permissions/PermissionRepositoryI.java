@@ -9,7 +9,7 @@ public interface PermissionRepositoryI {
     ArrayList<PermissionResponse> getPermittedClinicsForUser(String user_email, int page);
     ArrayList<PermissionResponse> getRequestedPermissionsByClinic(String clinicId, int page);
     void deletePermissionRequestByClinic(String user_email, String clinicId);
-    void permitClinic(String clinicId, String userId, Instant Expires);
+    void permitClinic(String clinicId, String user_email, Instant Expires, String permissionAccessScopes);
 
     void revokeClinicPermissionForUser(String clinicId, String email);
 }

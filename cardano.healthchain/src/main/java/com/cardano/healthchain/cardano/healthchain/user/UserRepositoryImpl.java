@@ -15,7 +15,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
         return null;
     }
     @Override
-    public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
+    public void createUser(UserCreateRequest userCreateRequest) {
         String SQL_USER_CREATION_STRING = "INSERT INTO users (email,hashed_password,first_name,last_name) VALUES (?,?,?,?)";
         Object args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname()};
         UUID userId = jdbcTemplate.queryForObject(
@@ -23,11 +23,6 @@ public class UserRepositoryImpl implements UserRepositoryI{
                 UUID.class,
                 args
         );
-        return UserCreateResponse
-                .builder()
-                .user_email(userCreateRequest.getEmail())
-                .token("")
-                .build();
     }
     @Override
     public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {

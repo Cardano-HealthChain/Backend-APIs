@@ -13,8 +13,8 @@ public class MailConfig {
     public JavaMailSender javaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
-        mailSender.setHost("[]@gmail.com");
-        mailSender.setPassword("app_password");
+        mailSender.setHost("healthchainteam@gmail.com");
+        mailSender.setPassword("kdsn ogfc qgmi xkpn");
         Properties javaMailProperties = mailSender.getJavaMailProperties();
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.smtp.auth", "true");

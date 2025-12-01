@@ -1,6 +1,8 @@
 package com.cardano.healthchain.cardano.healthchain.utils.permissions;
 
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 @Service
 public class PermissionService {
     private final PermissionRepositoryI permissionRepository;
-
+    private final Logger logger = LoggerFactory.getLogger(PermissionService.class);
     public PermissionService(PermissionRepositoryI permissionRepository) {
         this.permissionRepository = permissionRepository;
     }
@@ -23,13 +25,11 @@ public class PermissionService {
         return permissionRepository.getRequestedPermissionsByClinic(clinicId, page);
     }
 
-    public boolean permitClinic(String clinicId, String email) {
-        permissionRepository.permitClinic(clinicId, email, Instant.now().plus(1, ChronoUnit.DAYS));
-        return true;
+    public void permitClinic(String clinicId, String email, String permissionAccessScope) {
+        permissionRepository.permitClinic(clinicId, email, Instant.now().plus(1, ChronoUnit.DAYS), permissionAccessScope);
     }
-    public boolean revokeClinicPermissionForUser(String clinicId, String email) {
+    public void revokeClinicPermissionForUser(String clinicId, String email) {
         permissionRepository.revokeClinicPermissionForUser(clinicId, email);
-        return true;
     }
     public boolean deletePermissionRequestByClinic(String user_email, String clinicId) {
         permissionRepository.deletePermissionRequestByClinic(user_email,clinicId);

@@ -14,7 +14,7 @@ public class PermissionResponse {
     private String permissions_id;
     private String clinic_name;
     private String clinic_id;
-    private String access_type;
+    private PermissionAccessScopes access_type;
     private boolean granted;
     private boolean revoked;
     private LocalDateTime granted_at;

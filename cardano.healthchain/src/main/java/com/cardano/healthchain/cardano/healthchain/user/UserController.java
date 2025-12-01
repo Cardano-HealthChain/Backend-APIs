@@ -32,7 +32,7 @@ public class UserController {
         this.notificationService = notificationService;
     }
     @PostMapping("signup")
-    public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
+    public String signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
         return userService.createUser(userCreateRequest);
     }
     @PostMapping("otp/validate")
@@ -93,9 +93,9 @@ public class UserController {
     }
     @PostMapping("permissions/grant")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void grantPermission(@RequestParam String clinicId){
+    public void grantPermission(@RequestParam String clinicId, @RequestParam String permissionAccess){
         String email = "";
-        permissionService.permitClinic(clinicId, email);
+        permissionService.permitClinic(clinicId, email, permissionAccess);
     }
     @PostMapping("permissions/revoke")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -106,7 +106,8 @@ public class UserController {
     }
     @GetMapping("notifications")
     public ArrayList<NotificationResponse> getNotificationsForUser(@RequestParam int page, @RequestParam String category){
-        return notificationService.getNotificationsForUser(page, category, "");
+        String email = "";
+        return notificationService.getNotificationsForUser(page, category, email);
     }
     @PostMapping("notifications/read")
     @ResponseStatus(HttpStatus.NO_CONTENT)

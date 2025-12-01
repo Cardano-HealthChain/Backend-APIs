@@ -3,7 +3,7 @@ package com.cardano.healthchain.cardano.healthchain.user;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 
 public interface UserRepositoryI {
-    UserCreateResponse createUser(UserCreateRequest userCreateRequest);
+    void createUser(UserCreateRequest userCreateRequest);
     UserModel getUserByEmail(String user_email);
     void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_id);
 
