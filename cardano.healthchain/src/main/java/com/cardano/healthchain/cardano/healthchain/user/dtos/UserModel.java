@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class UserModel {
     private String email;
+    private String hashed_password;
     private String firstName;
     private String lastName;
     private String phoneNumber;

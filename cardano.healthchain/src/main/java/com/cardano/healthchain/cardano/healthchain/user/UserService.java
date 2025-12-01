@@ -7,32 +7,33 @@ import com.cardano.healthchain.cardano.healthchain.utils.otp.OtpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
     private final UserRepositoryI userRepository;
     private final OtpService otpService;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
-    public UserService(UserRepositoryI userRepository, OtpService otpService, JwtService jwtService) {
+    public UserService(UserRepositoryI userRepository, OtpService otpService, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.otpService = otpService;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
+    @Transactional
     public String createUser(UserCreateRequest userCreateRequest) {
         if(this.checkIfUserHasPendingAccount(userCreateRequest.getEmail())){
-
-            logger.info(String.format("User with email: %s wasn't verified otp resent",userCreateRequest.getEmail()));
-
             otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(4));
             throw new PendingUserException("Email has already been used but not verified, OTP resent!");
         };
+        userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
         userRepository.createUser(userCreateRequest);
         otpService.sendOtpMessageToEmail(userCreateRequest.getEmail(),otpService.generateOTP(4));
-
         logger.info(String.format("User with email: %s created, otp sent for verification",userCreateRequest.getEmail()));
-
         return String.format("OTP was sent to: %s for verification",userCreateRequest.getEmail());
     }
     public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
