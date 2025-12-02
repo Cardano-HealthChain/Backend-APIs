@@ -10,6 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Service
 public class UserService {
     private final UserRepositoryI userRepository;
@@ -32,25 +35,21 @@ public class UserService {
         userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
         userRepository.createUser(userCreateRequest);
         otpServiceEmailImpl.sendOtpMessageToEmail(userCreateRequest.getEmail(), otpServiceEmailImpl.generateOTP(6));
-        logger.info(String.format("User with email: %s created, otp sent for verification",userCreateRequest.getEmail()));
+        logger.info("OTP email sent".concat(LocalDateTime.now().toString()));
         return String.format("OTP was sent to: %s for verification",userCreateRequest.getEmail());
     }
-    @Transactional
     public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
         userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetails, email);
         logger.info("Personal data profile completion stage is successful");
     }
-    @Transactional
     public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
         userRepository.updateUserProfileHealthInformation(userUpdateProfileHealthInformation, email);
         logger.info("Health information data profile completion stage is successful");
     }
-    @Transactional
     public void updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
         userRepository.updateUserProfileEmergencyContact(userUpdateEmergencyInformation, email);
         logger.info("Emergency information profile completion stage is successful");
     }
-    @Transactional
     public void updateUserProfileWithLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
         userRepository.updateUserProfileLocationData(userUpdateLocationData,email);
         logger.info("Location data profile completion stage is successful");
@@ -58,7 +57,7 @@ public class UserService {
     public UserCreateResponse validateUserOtp(String otpcode, String email) {
         otpServiceEmailImpl.checkOTPValidity(otpcode, email);
         userRepository.verifyUserAccount(email);
-        logger.info(String.format("OTP validation for email: %s was successful",email));
+        logger.info(String.format("OTP validation was successful".concat(String.valueOf(LocalDateTime.now()))));
         return UserCreateResponse
                 .builder()
                 .user_email(email)

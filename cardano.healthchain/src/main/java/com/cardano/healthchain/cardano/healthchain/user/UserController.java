@@ -10,10 +10,12 @@ import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.Permis
 import com.cardano.healthchain.cardano.healthchain.utils.web3Wallet.WalletService;
 import com.cardano.healthchain.cardano.healthchain.utils.web3Wallet.dtos.WalletConnectionRequest;
 import com.cardano.healthchain.cardano.healthchain.utils.web3Wallet.dtos.WalletConnectionStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,17 +77,17 @@ public class UserController {
         return medicalDataService.getMedicalRecordById(record_id);
     }
     @GetMapping("/records")
-    public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) {
+    public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
         //get user-email from authentication object;
         return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
     }
     @GetMapping("/records/filtered")
-    public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) {
+    public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
         //get user email from authentication object;
         return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(), category);
     }
     @GetMapping("/records/search")
-    public ArrayList<MedicalDataResponse> searchForMedicalRecord(Principal principal, @RequestParam String search_keyword, @RequestParam int page){
+    public ArrayList<MedicalDataResponse> searchForMedicalRecord(Principal principal, @RequestParam String search_keyword, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
         return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(),search_keyword);
     }
     @GetMapping("permissions")

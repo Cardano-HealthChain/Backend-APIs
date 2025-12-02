@@ -1,5 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.utils;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,13 +16,11 @@ public class JwtService {
 
     private final SecretKey secretKey;
     private final long jwtExpirationMs;
-
-    public JwtService(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.expiration}") long jwtExpirationMs
-    ) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
-        this.jwtExpirationMs = jwtExpirationMs;
+    private final Dotenv dotenv;
+    public JwtService(Dotenv dotenv) {
+        this.secretKey = Keys.hmacShaKeyFor(dotenv.get("JWT_SECRET").getBytes());
+        this.jwtExpirationMs = Long.parseLong(dotenv.get("JwtExpirationTime"));
+        this.dotenv = dotenv;
     }
 
     // ===============================

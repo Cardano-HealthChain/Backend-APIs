@@ -2,9 +2,12 @@ package com.cardano.healthchain.cardano.healthchain.utils.medicalData;
 
 import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 @Service
@@ -18,16 +21,16 @@ public class MedicalDataService {
     }
     public MedicalDataResponse getMedicalRecordById(String record_id){
         MedicalDataResponse medicalRecordById = medicalDataRepository.getMedicalRecordById(record_id);
-        logger.info(String.format("Medical records for ID: %s was successfully retrieved",record_id));
+        logger.info("Medical records was successfully retrieved");
         return medicalRecordById;
     }
-    public ArrayList<MedicalDataResponse> verifyAndGetMedicalRecordsForUser(int page, String email) {
+    public ArrayList<MedicalDataResponse> verifyAndGetMedicalRecordsForUser(int page, String email) throws NoSuchAlgorithmException, JsonProcessingException {
         ArrayList<MedicalDataResponse> medicalRecordsForUser = medicalDataRepository.getMedicalRecordsForUser(page, email);
         blockChainService.verifyMultipleRecordset(medicalRecordsForUser);
-        logger.info(String.format("Medical records for user with email: %s was successfully verified on the blockchain and returned", email));
+        logger.info("Medical records for user was successfully verified on the blockchain and returned");
         return medicalRecordsForUser;
     }
-    public ArrayList<MedicalDataResponse> verifyAndGetMedicalRecordsForUserFiltered(int page, String email, String category) {
+    public ArrayList<MedicalDataResponse> verifyAndGetMedicalRecordsForUserFiltered(int page, String email, String category) throws NoSuchAlgorithmException, JsonProcessingException {
         ArrayList<MedicalDataResponse> medicalRecordsForUser = medicalDataRepository.getMedicalRecordsForUserFiltered(page, email, category);
         blockChainService.verifyMultipleRecordset(medicalRecordsForUser);
         logger.info(String.format("Medical records for user with email: %s was successfully verified on the blockchain and returned", email));

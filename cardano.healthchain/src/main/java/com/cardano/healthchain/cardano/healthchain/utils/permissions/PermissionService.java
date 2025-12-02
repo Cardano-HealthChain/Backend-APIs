@@ -16,7 +16,6 @@ public class PermissionService {
     public PermissionService(PermissionRepositoryI permissionRepository) {
         this.permissionRepository = permissionRepository;
     }
-
     public ArrayList<PermissionResponse> getPermittedClinicsForUser(String user_email, int page) {
         return permissionRepository.getPermittedClinicsForUser(user_email, page);
     }
