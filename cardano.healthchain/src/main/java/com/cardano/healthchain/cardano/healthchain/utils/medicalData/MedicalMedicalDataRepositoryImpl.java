@@ -32,4 +32,9 @@ public class MedicalMedicalDataRepositoryImpl implements MedicalDataRepositoryI 
         Object[] args = new Object[]{recordId};
         return jdbcTemplate.queryForObject(getMedicalRecordByIdSqlStatement,new BeanPropertyRowMapper<>(MedicalDataResponse.class),args);
     }
+    @Override
+    public int getVerifiedRecordCountForUser(String email) {
+        String getVerifiedRecordCountSqlStatement = "SELECT COUNT(*) FROM medical_records where user_email = ? and verified = TRUE";
+        return jdbcTemplate.queryForObject(getVerifiedRecordCountSqlStatement,Integer.class,new Object[]{email} );
+    }
 }

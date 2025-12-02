@@ -9,11 +9,11 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
 @Service
-public class OtpService {
+public class OtpServiceEmailImpl implements OtpServiceI{
     private final OtpRepositoryI otpRepository;
     private final SecureRandom otpRandomGenerator;
     private final MailService mailService;
-    public OtpService(OtpRepositoryI otpRepository, MailService mailService) {
+    public OtpServiceEmailImpl(OtpRepositoryI otpRepository, MailService mailService) {
         this.otpRepository = otpRepository;
         this.mailService = mailService;
         otpRandomGenerator = new SecureRandom("randomisation".getBytes());
@@ -38,7 +38,7 @@ public class OtpService {
         mailService.sendMail(
                 user_email,
                 "OTP CODE",
-                String.format("click this link to verify otp: api/v1/user/otp/validate?otpcode=%s&user_email=%s", otpcode, user_email)
+                String.format("click this link to verify otp: api/v1/resident/otp/validate?otpcode=%s&user_email=%s", otpcode, user_email)
         );
     }
 }

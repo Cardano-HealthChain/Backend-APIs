@@ -10,4 +10,6 @@ public interface MedicalDataRepositoryI {
     ArrayList<MedicalDataResponse> getMedicalRecordsForUserFiltered(int page, String email, String category);
 
     MedicalDataResponse getMedicalRecordById(String recordId);
+
+    int getVerifiedRecordCountForUser(String email);
 }

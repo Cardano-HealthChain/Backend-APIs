@@ -24,8 +24,18 @@ CREATE TABLE users (
 
     created_at                  TIMESTAMP DEFAULT NOW(),
     -- Changed after using otp to verify account
-    verified                    BOOLEAN
+    verified                    BOOLEAN DEFAULT false
     role                        text default RESIDENT
+);
+CREATE TABLE user_sessions (
+    session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_email VARCHAR(255) NOT NULL,
+    refresh_token TEXT NOT NULL,
+    ip_address VARCHAR(100),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    expires_at TIMESTAMP,
+    revoked BOOLEAN DEFAULT FALSE
 );
 CREATE TABLE otp_codes (
     otp_id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -46,15 +56,23 @@ CREATE TABLE clinics (
 );
 CREATE TABLE medical_records (
     record_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_email             UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-
+    user_email          UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,
     record_type         VARCHAR(100),         -- e.g., Lab Result, Immunization
     record_data         TEXT NOT NULL,
     clinic_name         VARCHAR(100),         -- e.g., Lab Result, Immunization
     hash_local          TEXT NOT NULL,        -- Hash of record stored in DB
     blockchain_tx_id    TEXT,
+    blockchain_tx_hash  TEXT,
+    block_number        TEXT,
+    verified            boolean,
     created_at          TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE medical_records_shared_with(
+    shared_with_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    record_id           UUID NOT NULL,
+    clinic_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+)
 CREATE TABLE permissions (
     permissions_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email               UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,

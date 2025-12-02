@@ -1,6 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.UUID;
@@ -12,21 +13,22 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
     @Override
     public UserModel getUserByEmail(String email) {
-        return null;
+        String sql = "SELECT * FROM users WHERE email = ?";
+        return jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(UserModel.class),
+                email
+        ).stream().findFirst().orElse(null);
     }
     @Override
     public void createUser(UserCreateRequest userCreateRequest) {
         String SQL_USER_CREATION_STRING = "INSERT INTO users (email,hashed_password,first_name,last_name) VALUES (?,?,?,?)";
         Object args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname()};
-        UUID userId = jdbcTemplate.queryForObject(
-                SQL_USER_CREATION_STRING,
-                UUID.class,
-                args
-        );
+        jdbcTemplate.update(SQL_USER_CREATION_STRING,args);
     }
     @Override
     public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
-        String SQL_USER_UPDATE_PERSONAL = "INSERT INTO users (first_name,last_name,gender,dob) VALUES (?,?,?,?) WHERE email = ?";
+        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET first_name = ?,last_name = ? ,gender = ?,dob = ? WHERE email = ?";
         Object args = new Object[]{
                 userUpdateProfilePersonalDetails.getFirst_name(),
                 userUpdateProfilePersonalDetails.getLast_name(),
@@ -38,7 +40,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
     @Override
     public void updateUserProfileHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
-        String SQL_USER_UPDATE_HEALTH = "INSERT INTO users (blood_type,genotype,known_allergies,pre_existing_conditions) VALUES (?,?,?,?) WHERE email = ?";
+        String SQL_USER_UPDATE_HEALTH = "UPDATE users SET blood_type = ?,genotype = ?,known_allergies = ?,pre_existing_conditions = ? WHERE email = ?";
         Object args = new Object[]{
                 userUpdateProfileHealthInformation.getBlood_type(),
                 userUpdateProfileHealthInformation.getGenotype(),
@@ -50,7 +52,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
     @Override
     public void updateUserProfileEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
-        String SQL_USER_UPDATE_EMERGENCY = "INSERT INTO users (emergency_contact_name,emergency_contact_phone,emergency_contact_rel) VALUES (?,?,?) WHERE email = ?";
+        String SQL_USER_UPDATE_EMERGENCY = "UPDATE users SET emergency_contact_name = ?,emergency_contact_phone = ?,emergency_contact_rel = ? WHERE email = ?";
         Object args = new Object[]{
                 userUpdateEmergencyInformation.getName(),
                 userUpdateEmergencyInformation.getRelationship(),
@@ -61,12 +63,22 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
     @Override
     public void updateUserProfileLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
-        String SQL_USER_UPDATE_LOCATION = "INSERT INTO users (nationality, state_of_origin) VALUES (?,?) WHERE email = ?";
+        String SQL_USER_UPDATE_LOCATION = "UPDATE users SET nationality = ?, state_of_origin = ? WHERE email = ?";
         Object args = new Object[]{
                 userUpdateLocationData.getCountry(),
                 userUpdateLocationData.getState(),
                 email
         };
         jdbcTemplate.update(SQL_USER_UPDATE_LOCATION, args);
+    }
+    @Override
+    public void verifyUserAccount(String email) {
+        String sql = "UPDATE users SET verified = TRUE WHERE email = ?";
+        jdbcTemplate.update(sql, email);
+    }
+    @Override
+    public void deleteUserByEmail(String email) {
+        String sql = "DELETE FROM users where email = ?";
+        jdbcTemplate.update(sql,email);
     }
 }

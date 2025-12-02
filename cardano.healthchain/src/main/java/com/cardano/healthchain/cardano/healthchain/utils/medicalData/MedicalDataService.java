@@ -1,6 +1,5 @@
 package com.cardano.healthchain.cardano.healthchain.utils.medicalData;
 
-import com.cardano.healthchain.cardano.healthchain.utils.MedicalRecordHashGeneratorService;
 import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import org.slf4j.Logger;
@@ -33,5 +32,8 @@ public class MedicalDataService {
         blockChainService.verifyMultipleRecordset(medicalRecordsForUser);
         logger.info(String.format("Medical records for user with email: %s was successfully verified on the blockchain and returned", email));
         return medicalRecordsForUser;
+    }
+    public int getVerifiedRecordsCountForUser(String email) {
+        return medicalDataRepository.getVerifiedRecordCountForUser(email);
     }
 }
