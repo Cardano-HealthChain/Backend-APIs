@@ -1,6 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
 import com.cardano.healthchain.cardano.healthchain.configs.ResidentUserDetailsService;
+import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,11 +21,11 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
-    private final EmailPasswordAuthFilter emailPasswordAuthFilter;
     private final JwtValidityFilter jwtValidityFilter;
-    public SecurityConfig(EmailPasswordAuthFilter emailPasswordAuthFilter, JwtValidityFilter jwtValidityFilter) {
-        this.emailPasswordAuthFilter = emailPasswordAuthFilter;
+    private final JwtService jwtService;
+    public SecurityConfig(JwtValidityFilter jwtValidityFilter, JwtService jwtService) {
         this.jwtValidityFilter = jwtValidityFilter;
+        this.jwtService = jwtService;
     }
 
     @Bean
@@ -54,7 +55,7 @@ public class SecurityConfig {
                             res.sendError(401, "Unauthorized");
                         })
                 )
-                .addFilterBefore(emailPasswordAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new EmailPasswordAuthFilter(authenticationManager,jwtService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtValidityFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }

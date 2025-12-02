@@ -14,11 +14,11 @@ public class UserRepositoryImpl implements UserRepositoryI{
     @Override
     public UserModel getUserByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        return jdbcTemplate.query(
+        return jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(UserModel.class),
                 email
-        ).stream().findFirst().orElse(null);
+        );
     }
     @Override
     public void createUser(UserCreateRequest userCreateRequest) {

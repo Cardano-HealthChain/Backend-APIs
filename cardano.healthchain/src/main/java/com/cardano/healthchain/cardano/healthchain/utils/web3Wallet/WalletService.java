@@ -12,10 +12,6 @@ public class WalletService {
     }
     public WalletConnectionStatus connectWallet(WalletConnectionRequest walletConnectionRequest, String userId) {
         walletRepository.connectWallet(walletConnectionRequest, userId);
-        return WalletConnectionStatus
-                .builder()
-                .ConnectionStatus(true)
-                .ConnectionMessage(String.format("Wallet Address: %s was connected to User with DID: %s",walletConnectionRequest.getWalletAddress(), walletConnectionRequest.getDid()))
-                .build();
+        return new WalletConnectionStatus(true,String.format("Wallet Address: %s was connected to User with DID: %s",walletConnectionRequest.getWalletAddress(), walletConnectionRequest.getDid()));
     }
 }

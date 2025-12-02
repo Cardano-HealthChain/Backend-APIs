@@ -19,7 +19,7 @@ public class JwtService {
     private final Dotenv dotenv;
     public JwtService(Dotenv dotenv) {
         this.secretKey = Keys.hmacShaKeyFor(dotenv.get("JWT_SECRET").getBytes());
-        this.jwtExpirationMs = Long.parseLong(dotenv.get("JwtExpirationTime"));
+        this.jwtExpirationMs = Long.parseLong(dotenv.get("JWT_EXPIRATION_MS"));
         this.dotenv = dotenv;
     }
 

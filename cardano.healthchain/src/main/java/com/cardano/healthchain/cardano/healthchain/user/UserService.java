@@ -58,11 +58,7 @@ public class UserService {
         otpServiceEmailImpl.checkOTPValidity(otpcode, email);
         userRepository.verifyUserAccount(email);
         logger.info(String.format("OTP validation was successful".concat(String.valueOf(LocalDateTime.now()))));
-        return UserCreateResponse
-                .builder()
-                .user_email(email)
-                .token(jwtService.generateToken(email))
-                .build();
+        return new UserCreateResponse(email,jwtService.generateToken(email));
     }
     private boolean checkIfUserHasPendingAccount(String email) {
         UserModel userByEmail = userRepository.getUserByEmail(email);

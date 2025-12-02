@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     user_id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     -- Signup Captured Details
     email                       VARCHAR(255) UNIQUE NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE users (
     verified                    BOOLEAN DEFAULT false
     role                        text default RESIDENT
 );
-CREATE TABLE user_sessions (
+CREATE TABLE IF NOT EXISTS user_sessions (
     session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email VARCHAR(255) NOT NULL,
     refresh_token TEXT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE user_sessions (
     expires_at TIMESTAMP,
     revoked BOOLEAN DEFAULT FALSE
 );
-CREATE TABLE otp_codes (
+CREATE TABLE IF NOT EXISTS otp_codes (
     otp_id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email               VARCHAR(255) NOT NULL,
     otp_code            VARCHAR(10),
@@ -45,7 +45,7 @@ CREATE TABLE otp_codes (
     expires_at          TIMESTAMP NOT NULL
     used                BOOLEAN DEFAULT FALSE
 );
-CREATE TABLE clinics (
+CREATE TABLE IF NOT EXISTS clinics (
     clinic_id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     clinic_name         VARCHAR(255) NOT NULL,
     address             TEXT,
@@ -54,7 +54,7 @@ CREATE TABLE clinics (
     verified            BOOLEAN
     license_no          TEXT
 );
-CREATE TABLE medical_records (
+CREATE TABLE IF NOT EXISTS medical_records (
     record_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email          UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,
     record_type         VARCHAR(100),         -- e.g., Lab Result, Immunization
@@ -67,13 +67,12 @@ CREATE TABLE medical_records (
     verified            boolean,
     created_at          TIMESTAMP DEFAULT NOW()
 );
-
-CREATE TABLE medical_records_shared_with(
+CREATE TABLE IF NOT EXISTS medical_records_shared_with(
     shared_with_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     record_id           UUID NOT NULL,
     clinic_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 )
-CREATE TABLE permissions (
+CREATE TABLE IF NOT EXISTS permissions(
     permissions_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email               UUID NOT NULL REFERENCES users(email) ON DELETE CASCADE,
     clinic_id           UUID NOT NULL REFERENCES clinics(id) ON DELETE CASCADE,
@@ -86,7 +85,7 @@ CREATE TABLE permissions (
     revoked_at          TIMESTAMP
     expires_at          TIMESTAMP
 );
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
     notification_id     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email          TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
 
@@ -98,14 +97,14 @@ CREATE TABLE notifications (
     sent_at             TIMESTAMP DEFAULT NOW(),
     read_status         BOOLEAN DEFAULT FALSE
 );
-CREATE TABLE firebase_device_tokens (
+CREATE TABLE IF NOT EXISTS firebase_device_tokens (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     device_token        TEXT NOT NULL,
     created_at          TIMESTAMP DEFAULT NOW(),
     UNIQUE (device_token)
 );
-CREATE TABLE notification_fanout_log (
+CREATE TABLE IF NOT EXISTS notification_fanout_log (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     notification_id     UUID REFERENCES notifications(id) ON DELETE CASCADE,
     device_token        TEXT,
@@ -113,7 +112,7 @@ CREATE TABLE notification_fanout_log (
     error_message       TEXT,
     sent_at             TIMESTAMP DEFAULT NOW()
 );
-CREATE TABLE audit_logs (
+CREATE TABLE IF NOT EXISTS audit_logs (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     user_id             UUID REFERENCES users(id),

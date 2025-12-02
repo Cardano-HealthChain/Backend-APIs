@@ -1,6 +1,6 @@
 spring:
   application:
     name: cardano.healthchain
-jwt:
-  secret: "your_super_long_32_byte_minimum_secret_key_here_12345"
-  expiration: 3600000  # 1 hour
+  sql:
+    init:
+      mode: always

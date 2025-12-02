@@ -39,10 +39,7 @@ public class BlockChainService {
         List<RecordDetails> recordDetails = medicalRecordsForUser.stream()
                 .map(record -> {
                     try {
-                        return RecordDetails.builder()
-                                .record_hash(medicalRecordHashGeneratorService.generateHashAndReturn(record))
-                                .record_id(record.getRecord_id())
-                                .build();
+                        return new RecordDetails(record.getRecord_id(),medicalRecordHashGeneratorService.generateHashAndReturn(record));
                     } catch (NoSuchAlgorithmException e) {
                         throw new RuntimeException("Hashing failed for record ID: " + record.getRecord_id(), e);
                     } catch (JsonProcessingException e) {
