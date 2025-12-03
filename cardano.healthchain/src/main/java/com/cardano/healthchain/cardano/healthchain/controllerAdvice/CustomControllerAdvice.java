@@ -3,6 +3,8 @@ package com.cardano.healthchain.cardano.healthchain.controllerAdvice;
 import com.cardano.healthchain.cardano.healthchain.exceptions.OtpException;
 import com.cardano.healthchain.cardano.healthchain.exceptions.PendingUserException;
 import com.cardano.healthchain.cardano.healthchain.exceptions.RecordTamperedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class CustomControllerAdvice {
+    private final Logger logger = LoggerFactory.getLogger(CustomControllerAdvice.class);
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<?> handleDuplicateKey(DuplicateKeyException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -46,6 +49,8 @@ public class CustomControllerAdvice {
     // Fallback for any unhandled errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getStackTrace());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("INTERNAL_ERROR","Something went wrong. Please try again."));
     }

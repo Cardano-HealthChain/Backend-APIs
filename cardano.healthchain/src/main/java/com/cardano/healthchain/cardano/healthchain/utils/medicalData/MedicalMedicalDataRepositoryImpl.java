@@ -3,10 +3,11 @@ package com.cardano.healthchain.cardano.healthchain.utils.medicalData;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 
-//@Repository
+@Repository
 public class MedicalMedicalDataRepositoryImpl implements MedicalDataRepositoryI {
     private final JdbcTemplate jdbcTemplate;
     public MedicalMedicalDataRepositoryImpl(JdbcTemplate jdbcTemplate) {

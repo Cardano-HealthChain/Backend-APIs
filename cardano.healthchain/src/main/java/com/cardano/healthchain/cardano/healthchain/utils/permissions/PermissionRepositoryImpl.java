@@ -3,12 +3,13 @@ package com.cardano.healthchain.cardano.healthchain.utils.permissions;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-//@Repository
+@Repository
 public class PermissionRepositoryImpl implements PermissionRepositoryI{
     private final JdbcTemplate jdbcTemplate;
     public PermissionRepositoryImpl(JdbcTemplate jdbcTemplate) {

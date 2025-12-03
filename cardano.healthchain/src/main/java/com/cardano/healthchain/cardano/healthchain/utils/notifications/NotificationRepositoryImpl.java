@@ -3,10 +3,11 @@ package com.cardano.healthchain.cardano.healthchain.utils.notifications;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.ArrayList;
-
+@Repository
 public class NotificationRepositoryImpl implements NotificationRepositoryI{
     private final JdbcTemplate jdbcTemplate;
     public NotificationRepositoryImpl(JdbcTemplate jdbcTemplate) {

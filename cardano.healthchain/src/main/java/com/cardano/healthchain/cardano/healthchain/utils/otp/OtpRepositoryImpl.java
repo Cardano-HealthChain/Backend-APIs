@@ -3,10 +3,12 @@ package com.cardano.healthchain.cardano.healthchain.utils.otp;
 import com.cardano.healthchain.cardano.healthchain.utils.otp.dtos.OtpResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+@Repository
 public class OtpRepositoryImpl implements OtpRepositoryI{
     private final JdbcTemplate jdbcTemplate;
     public OtpRepositoryImpl(JdbcTemplate jdbcTemplate) {
