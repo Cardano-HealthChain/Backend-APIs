@@ -34,7 +34,9 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
             String password = requestBody.get("password");
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
             return authenticationManager.authenticate(authToken);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            System.out.println(e.getMessage());
             throw new RuntimeException("Invalid login payload");
         }
     }

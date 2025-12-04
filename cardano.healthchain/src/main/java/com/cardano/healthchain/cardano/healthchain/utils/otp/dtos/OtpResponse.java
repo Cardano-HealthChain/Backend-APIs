@@ -20,6 +20,8 @@ public class OtpResponse {
         this.used = used;
         this.expiresAt = expiresAt;
     }
+    public OtpResponse() {
+    }
     public String getOtpId() {
         return otpId;
     }

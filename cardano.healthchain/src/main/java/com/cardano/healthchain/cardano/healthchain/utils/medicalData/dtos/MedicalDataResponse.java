@@ -31,6 +31,9 @@ public class MedicalDataResponse {
         this.created_at = created_at;
     }
 
+    public MedicalDataResponse() {
+    }
+
     public String getRecord_id() {
         return record_id;
     }

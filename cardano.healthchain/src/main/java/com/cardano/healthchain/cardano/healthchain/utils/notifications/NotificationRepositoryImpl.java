@@ -14,10 +14,10 @@ public class NotificationRepositoryImpl implements NotificationRepositoryI{
         this.jdbcTemplate = jdbcTemplate;
     }
     @Override
-    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String category, String user_email) {
+    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String user_email) {
         int offset = (page - 1) * 5;
-        String getNotificationSqlStatement = "SELECT * FROM notifications where notification_type = ?, user_email = ? ORDER BY notification_id LIMIT 10 OFFSET ?";
-        Object[] args = new Object[]{category,user_email,offset};
+        String getNotificationSqlStatement = "SELECT * FROM notifications where user_email = ? ORDER BY sent_at LIMIT 10 OFFSET ?";
+        Object[] args = new Object[]{user_email,offset};
         return (ArrayList<NotificationResponse>) jdbcTemplate.query(
                 getNotificationSqlStatement,
                 new BeanPropertyRowMapper<>(NotificationResponse.class),

@@ -15,6 +15,7 @@ public class MailService {
     }
     public void sendMail(String to, String subject, String text){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("healthchainteam@gmail.com");
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(text);
@@ -24,6 +25,7 @@ public class MailService {
         MimeMessage message = mailSender.createMimeMessage();
         // true = multipart (allows HTML, attachments, inline images, etc.)
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom("healthchainteam@gmail.com");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlContent, true);

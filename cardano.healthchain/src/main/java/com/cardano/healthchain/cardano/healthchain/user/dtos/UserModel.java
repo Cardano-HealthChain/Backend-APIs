@@ -7,30 +7,52 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class UserModel {
     private String email;
     private String hashed_password;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
+    private String first_name;
+    private String last_name;
+    private String phone_number;
     private LocalDate dob;
     private String gender;
     private String address;
     private String bloodType;
     private String genotype;
-    private String knownAllergies;
-    private String preExistingConditions;
-    private String emergencyContactName;
-    private String emergencyContactPhone;
-    private String emergencyContactRelationship;
+    private String known_allergies;
+    private String pre_existing_conditions;
+    private String emergency_contact_name;
+    private String emergency_contact_phone;
+    private String emergency_contact_rel;
     private String nationality;
-    private String stateOfOrigin;
-    private LocalDateTime createdAt;
+    private String state_of_origin;
+    private LocalDateTime created_at;
     private boolean verified;
     private String role;
+
+    public UserModel(String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String bloodType, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String role) {
+        this.email = email;
+        this.hashed_password = hashed_password;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.phone_number = phone_number;
+        this.dob = dob;
+        this.gender = gender;
+        this.address = address;
+        this.bloodType = bloodType;
+        this.genotype = genotype;
+        this.known_allergies = known_allergies;
+        this.pre_existing_conditions = pre_existing_conditions;
+        this.emergency_contact_name = emergency_contact_name;
+        this.emergency_contact_phone = emergency_contact_phone;
+        this.emergency_contact_rel = emergency_contact_rel;
+        this.nationality = nationality;
+        this.state_of_origin = state_of_origin;
+        this.created_at = created_at;
+        this.verified = verified;
+        this.role = role;
+    }
+    public UserModel() {
+    }
 
     public String getEmail() {
         return email;
@@ -48,28 +70,28 @@ public class UserModel {
         this.hashed_password = hashed_password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
     public LocalDate getDob() {
@@ -112,44 +134,44 @@ public class UserModel {
         this.genotype = genotype;
     }
 
-    public String getKnownAllergies() {
-        return knownAllergies;
+    public String getKnown_allergies() {
+        return known_allergies;
     }
 
-    public void setKnownAllergies(String knownAllergies) {
-        this.knownAllergies = knownAllergies;
+    public void setKnown_allergies(String known_allergies) {
+        this.known_allergies = known_allergies;
     }
 
-    public String getPreExistingConditions() {
-        return preExistingConditions;
+    public String getPre_existing_conditions() {
+        return pre_existing_conditions;
     }
 
-    public void setPreExistingConditions(String preExistingConditions) {
-        this.preExistingConditions = preExistingConditions;
+    public void setPre_existing_conditions(String pre_existing_conditions) {
+        this.pre_existing_conditions = pre_existing_conditions;
     }
 
-    public String getEmergencyContactName() {
-        return emergencyContactName;
+    public String getEmergency_contact_name() {
+        return emergency_contact_name;
     }
 
-    public void setEmergencyContactName(String emergencyContactName) {
-        this.emergencyContactName = emergencyContactName;
+    public void setEmergency_contact_name(String emergency_contact_name) {
+        this.emergency_contact_name = emergency_contact_name;
     }
 
-    public String getEmergencyContactPhone() {
-        return emergencyContactPhone;
+    public String getEmergency_contact_phone() {
+        return emergency_contact_phone;
     }
 
-    public void setEmergencyContactPhone(String emergencyContactPhone) {
-        this.emergencyContactPhone = emergencyContactPhone;
+    public void setEmergency_contact_phone(String emergency_contact_phone) {
+        this.emergency_contact_phone = emergency_contact_phone;
     }
 
-    public String getEmergencyContactRelationship() {
-        return emergencyContactRelationship;
+    public String getEmergency_contact_rel() {
+        return emergency_contact_rel;
     }
 
-    public void setEmergencyContactRelationship(String emergencyContactRelationship) {
-        this.emergencyContactRelationship = emergencyContactRelationship;
+    public void setEmergency_contact_rel(String emergency_contact_rel) {
+        this.emergency_contact_rel = emergency_contact_rel;
     }
 
     public String getNationality() {
@@ -160,20 +182,20 @@ public class UserModel {
         this.nationality = nationality;
     }
 
-    public String getStateOfOrigin() {
-        return stateOfOrigin;
+    public String getState_of_origin() {
+        return state_of_origin;
     }
 
-    public void setStateOfOrigin(String stateOfOrigin) {
-        this.stateOfOrigin = stateOfOrigin;
+    public void setState_of_origin(String state_of_origin) {
+        this.state_of_origin = state_of_origin;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
     public boolean isVerified() {

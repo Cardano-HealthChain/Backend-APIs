@@ -13,13 +13,16 @@ public class MailConfig {
     public JavaMailSender javaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
-        mailSender.setHost("healthchainteam@gmail.com");
-        mailSender.setPassword("kdsn ogfc qgmi xkpn");
-        Properties javaMailProperties = mailSender.getJavaMailProperties();
-        javaMailProperties.put("mail.transport.protocol", "smtp");
-        javaMailProperties.put("mail.smtp.auth", "true");
-        javaMailProperties.put("mail.smtp.starttls.enable", "true");
-        javaMailProperties.put("mail.debug", "true");
+        mailSender.setPort(587);
+        mailSender.setUsername("healthchainteam@gmail.com");
+        mailSender.setPassword("kdsn ogfc qgmi xkpn"); // your app password
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
         return mailSender;
     }
 }

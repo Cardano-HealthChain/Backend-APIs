@@ -48,7 +48,8 @@ public class CustomControllerAdvice {
     }
     // Fallback for any unhandled errors
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception ex) {
+    public ResponseEntity<?> handleException(Exception ex) throws Exception {
+//        throw ex;
         System.out.println(ex.getMessage());
         System.out.println(ex.getStackTrace());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

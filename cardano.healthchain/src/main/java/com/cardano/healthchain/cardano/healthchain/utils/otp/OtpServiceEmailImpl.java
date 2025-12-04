@@ -37,7 +37,7 @@ public class OtpServiceEmailImpl implements OtpServiceI{
         otpRepository.insertOtpForUser(user_email,otpcode);
         mailService.sendMail(
                 user_email,
-                "OTP CODE",
+                "Your verification code",
                 String.format("click this link to verify otp: api/v1/resident/otp/validate?otpcode=%s&user_email=%s", otpcode, user_email)
         );
     }

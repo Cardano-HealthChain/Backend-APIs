@@ -1,5 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.user;
 
+import com.cardano.healthchain.cardano.healthchain.clinics.ClinicService;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.MedicalDataService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
@@ -28,15 +29,17 @@ public class UserController {
     private final WalletService walletService;
     private final MedicalDataService medicalDataService;
     private final NotificationService notificationService;
-    public UserController(UserService userService, PermissionService permissionService, WalletService walletService, MedicalDataService medicalDataService, NotificationService notificationService) {
+    private final ClinicService clinicService;
+    public UserController(UserService userService, PermissionService permissionService, WalletService walletService, MedicalDataService medicalDataService, NotificationService notificationService, ClinicService clinicService) {
         this.userService = userService;
         this.permissionService = permissionService;
         this.walletService = walletService;
         this.medicalDataService = medicalDataService;
         this.notificationService = notificationService;
+        this.clinicService = clinicService;
     }
     @PostMapping("signup")
-    public String signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
+    public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
         return userService.createUser(userCreateRequest);
     }
     @GetMapping("profile_completion")
@@ -78,12 +81,10 @@ public class UserController {
     }
     @GetMapping("/records")
     public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        //get user-email from authentication object;
         return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
     }
     @GetMapping("/records/filtered")
     public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
-        //get user email from authentication object;
         return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(), category);
     }
     @GetMapping("/records/search")
@@ -105,8 +106,8 @@ public class UserController {
         permissionService.revokeClinicPermissionForUser(clinicId,principal.getName());
     }
     @GetMapping("notifications")
-    public ArrayList<NotificationResponse> getNotificationsForUser(Principal principal, @RequestParam int page, @RequestParam String category){
-        return notificationService.getNotificationsForUser(page, category, principal.getName());
+    public ArrayList<NotificationResponse> getNotificationsForUser(Principal principal, @RequestParam int page){
+        return notificationService.getNotificationsForUser(page, principal.getName());
     }
     @PostMapping("notifications/read")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -118,8 +119,8 @@ public class UserController {
         return medicalDataService.getVerifiedRecordsCountForUser(principal.getName());
     }
     @GetMapping("clinics_visited")
-    public String getTotalClinicVisitsWithLastClinicVisited(){
-        return "Coming soon";
+    public int getTotalClinicRecordSharedWith(Principal principal){
+        return clinicService.getTotalClinicsVisitedByUser(principal.getName());
     }
     @PostMapping("delete")
     public void deleteAccount(Principal principal){

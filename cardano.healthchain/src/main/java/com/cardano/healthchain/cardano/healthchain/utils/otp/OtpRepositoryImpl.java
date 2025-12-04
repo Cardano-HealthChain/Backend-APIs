@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Repository
@@ -27,7 +28,7 @@ public class OtpRepositoryImpl implements OtpRepositoryI{
     @Override
     public void insertOtpForUser(String email, String otpcode) {
         String OtpInsertStatement = "INSERT INTO otp_codes (email,otp_code,expires_at) VALUES (?,?,?)";
-        Object[] args = new Object[]{email,otpcode, Instant.now().plus(10, ChronoUnit.MINUTES)};
+        Object[] args = new Object[]{email,otpcode, LocalDateTime.now().plusMinutes(10)};
         jdbcTemplate.update(
                 OtpInsertStatement,
                 args

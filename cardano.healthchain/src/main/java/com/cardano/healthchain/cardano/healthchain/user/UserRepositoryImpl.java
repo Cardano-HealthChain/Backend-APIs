@@ -4,6 +4,8 @@ import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.UUID;
 @Repository
 public class UserRepositoryImpl implements UserRepositoryI{
@@ -14,22 +16,23 @@ public class UserRepositoryImpl implements UserRepositoryI{
     @Override
     public UserModel getUserByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        return jdbcTemplate.queryForObject(
+        List<UserModel> users = jdbcTemplate.query(
                 sql,
                 new BeanPropertyRowMapper<>(UserModel.class),
                 email
         );
+        return users.isEmpty() ? null : users.get(0);
     }
     @Override
     public void createUser(UserCreateRequest userCreateRequest) {
-        String SQL_USER_CREATION_STRING = "INSERT INTO users (email,hashed_password,first_name,last_name) VALUES (?,?,?,?)";
-        Object args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname()};
+        String SQL_USER_CREATION_STRING = "INSERT INTO users (email,hashed_password,first_name,last_name,role) VALUES (?,?,?,?,?)";
+        Object[] args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname(),"RESIDENT"};
         jdbcTemplate.update(SQL_USER_CREATION_STRING,args);
     }
     @Override
     public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
         String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET first_name = ?,last_name = ? ,gender = ?,dob = ? WHERE email = ?";
-        Object args = new Object[]{
+        Object[] args = new Object[]{
                 userUpdateProfilePersonalDetails.getFirst_name(),
                 userUpdateProfilePersonalDetails.getLast_name(),
                 userUpdateProfilePersonalDetails.getGender(),
@@ -41,7 +44,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
     @Override
     public void updateUserProfileHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
         String SQL_USER_UPDATE_HEALTH = "UPDATE users SET blood_type = ?,genotype = ?,known_allergies = ?,pre_existing_conditions = ? WHERE email = ?";
-        Object args = new Object[]{
+        Object[] args = new Object[]{
                 userUpdateProfileHealthInformation.getBlood_type(),
                 userUpdateProfileHealthInformation.getGenotype(),
                 userUpdateProfileHealthInformation.getKnown_allergies(),
@@ -53,7 +56,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
     @Override
     public void updateUserProfileEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
         String SQL_USER_UPDATE_EMERGENCY = "UPDATE users SET emergency_contact_name = ?,emergency_contact_phone = ?,emergency_contact_rel = ? WHERE email = ?";
-        Object args = new Object[]{
+        Object[] args = new Object[]{
                 userUpdateEmergencyInformation.getName(),
                 userUpdateEmergencyInformation.getRelationship(),
                 userUpdateEmergencyInformation.getPhone_number(),
@@ -64,7 +67,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
     @Override
     public void updateUserProfileLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
         String SQL_USER_UPDATE_LOCATION = "UPDATE users SET nationality = ?, state_of_origin = ? WHERE email = ?";
-        Object args = new Object[]{
+        Object[] args = new Object[]{
                 userUpdateLocationData.getCountry(),
                 userUpdateLocationData.getState(),
                 email

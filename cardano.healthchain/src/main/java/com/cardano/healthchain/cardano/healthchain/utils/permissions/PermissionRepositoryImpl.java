@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
@@ -17,8 +18,9 @@ public class PermissionRepositoryImpl implements PermissionRepositoryI{
     }
     @Override
     public ArrayList<PermissionResponse> getPermittedClinicsForUser(String user_email, int page) {
-        int offset = (page - 1) * 5;
-        String getPermittedClinicsSql = "SELECT o.*, u.* FROM permissions o JOIN clinics u on o.clinic_id = u.clinic_id WHERE user_email = ? ORDER BY clinic_id LIMIT 5 offset ?";
+        int pageNumber = Math.max(page, 1); // at least 1
+        int offset = (pageNumber - 1) * 5;
+        String getPermittedClinicsSql = "SELECT o.*, u.* FROM permissions o JOIN clinics u ON o.clinic_id = u.clinic_id WHERE email = ? ORDER BY u.clinic_id LIMIT 5 OFFSET ?";
         Object[] args = new Object[]{user_email,offset};
         return (ArrayList<PermissionResponse>) jdbcTemplate.query(
                 getPermittedClinicsSql,
@@ -56,7 +58,7 @@ public class PermissionRepositoryImpl implements PermissionRepositoryI{
     @Override
     public void permitClinic(String clinicId, String user_email, Instant Expires, String permissionAccessScopes) {
         String permitClinicSqlStatement = "UPDATE permissions set granted = true, granted_at = ?, access_type = ?,expires_at = ? WHERE email = ? AND clinic_id = ?";
-        Object[] args = new Object[]{Instant.now(), permissionAccessScopes, Instant.now().plus(1, ChronoUnit.DAYS),user_email,clinicId};
+        Object[] args = new Object[]{Instant.now(), permissionAccessScopes, LocalDateTime.now().plusDays(1),user_email,clinicId};
         int update = jdbcTemplate.update(permitClinicSqlStatement, args);
     }
 

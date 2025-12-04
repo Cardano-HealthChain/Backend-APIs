@@ -47,6 +47,7 @@ public class JwtValidityFilter extends OncePerRequestFilter {
 
         // Validate JWT
         if (!jwtService.isTokenValid(token)) {
+            logger.warn("Invalid or expired JWT: " + token);
             filterChain.doFilter(request, response);
             return;
         }

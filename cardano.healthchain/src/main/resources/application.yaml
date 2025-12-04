@@ -1,6 +1,14 @@
 spring:
   application:
     name: cardano.healthchain
+  web:
+    resources:
+      add-mappings: false
   sql:
+    initialization:
+      mode: always
     init:
       mode: always
+springdoc:
+  swagger-ui:
+    enabled: true

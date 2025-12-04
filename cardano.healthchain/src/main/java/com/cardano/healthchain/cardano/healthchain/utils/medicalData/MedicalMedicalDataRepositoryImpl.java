@@ -15,15 +15,17 @@ public class MedicalMedicalDataRepositoryImpl implements MedicalDataRepositoryI 
     }
     @Override
     public ArrayList<MedicalDataResponse> getMedicalRecordsForUser(int page, String email) {
-        int offset = (page - 1) * 5;
-        String getMedicalRecordsForUserFilteredSqlStatement = "SELECT o.*, u.* FROM medical_records o JOIN users u on o.user_id = u.user_id WHERE email = ? ORDER BY record_id LIMIT ? offset ?";
+        int pageNumber = Math.max(page, 1); // at least 1
+        int offset = (pageNumber - 1) * 5;
+        String getMedicalRecordsForUserFilteredSqlStatement = "SELECT o.*, u.* FROM medical_records o JOIN users u on o.user_email = u.email WHERE email = ? ORDER BY record_id LIMIT ? offset ?";
         Object[] args = new Object[]{email,5,offset};
         return (ArrayList<MedicalDataResponse>) jdbcTemplate.query(getMedicalRecordsForUserFilteredSqlStatement,new BeanPropertyRowMapper<>(MedicalDataResponse.class),args);
     }
     @Override
     public ArrayList<MedicalDataResponse> getMedicalRecordsForUserFiltered(int page, String email, String category) {
-        int offset = (page - 1) * 5;
-        String getMedicalRecordsForUserFilteredSqlStatement = "SELECT o.*, u.* FROM medical_records o JOIN users u on o.user_id = u.user_id WHERE email = ? AND record_type = ? ORDER BY record_id LIMIT ? offset ?";
+        int pageNumber = Math.max(page, 1); // at least 1
+        int offset = (pageNumber - 1) * 5;
+        String getMedicalRecordsForUserFilteredSqlStatement = "SELECT o.*, u.* FROM medical_records o JOIN users u on o.user_email = u.email WHERE email = ?  AND record_type = ? ORDER BY record_id LIMIT ? offset ?";
         Object[] args = new Object[]{email,category,5,offset};
         return (ArrayList<MedicalDataResponse>) jdbcTemplate.query(getMedicalRecordsForUserFilteredSqlStatement,new BeanPropertyRowMapper<>(MedicalDataResponse.class),args);
     }
@@ -37,5 +39,11 @@ public class MedicalMedicalDataRepositoryImpl implements MedicalDataRepositoryI 
     public int getVerifiedRecordCountForUser(String email) {
         String getVerifiedRecordCountSqlStatement = "SELECT COUNT(*) FROM medical_records where user_email = ? and verified = TRUE";
         return jdbcTemplate.queryForObject(getVerifiedRecordCountSqlStatement,Integer.class,new Object[]{email} );
+    }
+    @Override
+    public void recordPermissionSharedWithClinic(String email, String clinicId) {
+        String recordPermissionSharedWithClinicSqlStatement = "INSERT INTO medical_records_shared_with (user_email, clinic_id) VALUES (?,?)";
+        Object[] args = new Object[]{email,clinicId};
+        jdbcTemplate.update(recordPermissionSharedWithClinicSqlStatement,args);
     }
 }

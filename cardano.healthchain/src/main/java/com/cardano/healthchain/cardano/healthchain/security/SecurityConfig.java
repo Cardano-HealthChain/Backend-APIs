@@ -46,9 +46,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest()
+                        .requestMatchers("api/v1/resident/signup","auth/login")
                         .permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authenticationManager(authenticationManager)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, e) -> {
