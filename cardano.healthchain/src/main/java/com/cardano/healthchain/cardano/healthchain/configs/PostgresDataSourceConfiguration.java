@@ -19,12 +19,7 @@ public class PostgresDataSourceConfiguration{
     public DataSource createHikariDataSource(){
         HikariConfig config = new HikariConfig();
 
-        String jdbcUrl = String.format(
-                "jdbc:postgresql://%s:%s/%s",
-                dotenv.get("DB_HOST"),
-                dotenv.get("DB_PORT"),
-                dotenv.get("DB_NAME")
-        );
+        String jdbcUrl = dotenv.get("DB_URL");
 
         config.setJdbcUrl(jdbcUrl);
         config.setUsername(dotenv.get("DB_USERNAME"));
