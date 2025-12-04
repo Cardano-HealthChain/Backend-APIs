@@ -1,6 +1,8 @@
 spring:
   application:
     name: cardano.healthchain
+  server:
+    port: ${PORT:8080}
   web:
     resources:
       add-mappings: false
