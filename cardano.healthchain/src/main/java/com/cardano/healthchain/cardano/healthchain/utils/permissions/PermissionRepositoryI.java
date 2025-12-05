@@ -12,4 +12,8 @@ public interface PermissionRepositoryI {
     void permitClinic(String clinicId, String user_email, Instant Expires, String permissionAccessScopes);
 
     void revokeClinicPermissionForUser(String clinicId, String email);
+
+    void clinicRequestUserPermission(String clinicEmail, String userEmail, String accessType);
+
+    ArrayList<PermissionResponse> getClinicPermissionRequests(String userEmail, int page);
 }

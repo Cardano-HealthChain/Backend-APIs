@@ -2,6 +2,8 @@ package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.ACTOR_TYPE;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
 import com.cardano.healthchain.cardano.healthchain.utils.otp.OtpServiceEmailImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +19,19 @@ public class UserService {
     private final OtpServiceEmailImpl otpServiceEmailImpl;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuditService auditService;
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
-    public UserService(UserRepositoryI userRepository, OtpServiceEmailImpl otpServiceEmailImpl, JwtService jwtService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepositoryI userRepository, OtpServiceEmailImpl otpServiceEmailImpl, JwtService jwtService, PasswordEncoder passwordEncoder, AuditService auditService) {
         this.userRepository = userRepository;
         this.otpServiceEmailImpl = otpServiceEmailImpl;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
+        this.auditService = auditService;
     }
     @Transactional
     public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
+        //MVP wont require OTP, OTP logic commented out to implement later
+
 //        if(this.checkIfUserHasPendingAccount(userCreateRequest.getEmail())){
 //            otpServiceEmailImpl.sendOtpMessageToEmail(userCreateRequest.getEmail(), otpServiceEmailImpl.generateOTP(6));
 //            throw new PendingUserException("Email has already been used but not verified, OTP resent!");
@@ -43,24 +49,32 @@ public class UserService {
         logger.info(String.format("OTP validation was successful".concat(String.valueOf(LocalDateTime.now()))));
         return new UserCreateResponse(email,jwtService.generateToken(email));
     }
-    public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
-        userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetails, email);
+    @Transactional
+    public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_email) {
+        userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetails, user_email);
+        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"Profile Update","Update Profile with Personal details");
         logger.info("Personal data profile completion stage is successful");
     }
-    public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
-        userRepository.updateUserProfileHealthInformation(userUpdateProfileHealthInformation, email);
+    @Transactional
+    public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String user_email) {
+        userRepository.updateUserProfileHealthInformation(userUpdateProfileHealthInformation, user_email);
+        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"Profile Update","Update Profile with health information");
         logger.info("Health information data profile completion stage is successful");
     }
-    public void updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
-        userRepository.updateUserProfileEmergencyContact(userUpdateEmergencyInformation, email);
+    @Transactional
+    public void updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String user_email) {
+        userRepository.updateUserProfileEmergencyContact(userUpdateEmergencyInformation, user_email);
+        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"Profile Update","Update Profile with emergency information");
         logger.info("Emergency information profile completion stage is successful");
     }
-    public void updateUserProfileWithLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
-        userRepository.updateUserProfileLocationData(userUpdateLocationData,email);
+    @Transactional
+    public void updateUserProfileWithLocationData(UserUpdateLocationData userUpdateLocationData, String user_email) {
+        userRepository.updateUserProfileLocationData(userUpdateLocationData,user_email);
+        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"Profile Update","Update Profile with location data");
         logger.info("Location data profile completion stage is successful");
     }
-    private boolean checkIfUserHasPendingAccount(String email) {
-        UserModel userByEmail = userRepository.getUserByEmail(email);
+    private boolean checkIfUserHasPendingAccount(String user_email) {
+        UserModel userByEmail = userRepository.getUserByEmail(user_email);
         if(userByEmail == null) return false;
         return userByEmail.isVerified();
     }

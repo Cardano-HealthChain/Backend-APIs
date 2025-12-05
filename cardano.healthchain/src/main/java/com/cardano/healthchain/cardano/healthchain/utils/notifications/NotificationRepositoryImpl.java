@@ -30,4 +30,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryI{
         Object[] args = new Object[]{notificationId};
         int update = jdbcTemplate.update(markNotificationAsReadSqlStatement, args);
     }
+
+    public void insertClinicRequestNotification(String userEmail, String title, String message, String notificationLevel, String notificationType) {
+    }
 }

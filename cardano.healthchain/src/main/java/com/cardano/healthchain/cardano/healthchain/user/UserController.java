@@ -2,6 +2,8 @@ package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.clinics.ClinicService;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.dtos.AuditModel;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.MedicalDataService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationService;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/resident")
@@ -30,13 +31,15 @@ public class UserController {
     private final MedicalDataService medicalDataService;
     private final NotificationService notificationService;
     private final ClinicService clinicService;
-    public UserController(UserService userService, PermissionService permissionService, WalletService walletService, MedicalDataService medicalDataService, NotificationService notificationService, ClinicService clinicService) {
+    private final AuditService auditService;
+    public UserController(UserService userService, PermissionService permissionService, WalletService walletService, MedicalDataService medicalDataService, NotificationService notificationService, ClinicService clinicService, AuditService auditService) {
         this.userService = userService;
         this.permissionService = permissionService;
         this.walletService = walletService;
         this.medicalDataService = medicalDataService;
         this.notificationService = notificationService;
         this.clinicService = clinicService;
+        this.auditService = auditService;
     }
     @PostMapping("signup")
     public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
@@ -72,19 +75,26 @@ public class UserController {
     }
     @PostMapping("wallet/connect")
     public WalletConnectionStatus connectUserWallet(Principal principal, @RequestBody WalletConnectionRequest walletConnectionRequest){
-        //get principal from authentication after adding spring security
         return walletService.connectWallet(walletConnectionRequest, principal.getName());
     }
     @GetMapping("/record")
-    public MedicalDataResponse getMedicalRecordById(@RequestParam String record_id) {
-        return medicalDataService.getMedicalRecordById(record_id);
+    public MedicalDataResponse getMedicalRecordById(Principal principal,@RequestParam String record_id) {
+        return medicalDataService.getMedicalRecordById(record_id, principal.getName());
     }
     @GetMapping("/records")
     public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
+        return medicalDataService.getMedicalRecordsForUser(page, principal.getName());
     }
     @GetMapping("/records/filtered")
     public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
+        return medicalDataService.getMedicalRecordsForUserFiltered(page,principal.getName(), category);
+    }
+    @GetMapping("/verified_records")
+    public ArrayList<MedicalDataResponse> getVerifiedMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
+        return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
+    }
+    @GetMapping("/verified_records/filtered")
+    public ArrayList<MedicalDataResponse> getVerifiedMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
         return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(), category);
     }
     @GetMapping("/records/search")
@@ -94,6 +104,10 @@ public class UserController {
     @GetMapping("permissions")
     public ArrayList<PermissionResponse> getPermittedClinicsForUser(Principal principal, @RequestParam int page){
         return permissionService.getPermittedClinicsForUser(principal.getName(),page);
+    }
+    @GetMapping("permission-requests")
+    public ArrayList<PermissionResponse> getClinicPermissionRequests(Principal principal, @RequestParam int page){
+        return permissionService.getClinicPermissionRequestsForUser(principal.getName(),page);
     }
     @PostMapping("permissions/grant")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -121,6 +135,10 @@ public class UserController {
     @GetMapping("clinics_visited")
     public int getTotalClinicRecordSharedWith(Principal principal){
         return clinicService.getTotalClinicsVisitedByUser(principal.getName());
+    }
+    @GetMapping("audit")
+    public ArrayList<AuditModel> getAuditLogInformation(Principal principal,@RequestParam int page){
+        return auditService.getAuditsByActorReference(page,principal.getName());
     }
     @PostMapping("delete")
     public void deleteAccount(Principal principal){

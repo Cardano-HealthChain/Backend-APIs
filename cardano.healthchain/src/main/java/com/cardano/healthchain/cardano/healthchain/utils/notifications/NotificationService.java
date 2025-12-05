@@ -18,4 +18,11 @@ public class NotificationService {
     public void markNotificationAsRead(String notificationId) {
         notificationRepository.markNotificationAsRead(notificationId);
     }
+
+    public void insertClinicRequestNotification(String userEmail, String title, String message, String notification_level, String notification_type) {
+        notificationRepository.insertClinicRequestNotification(userEmail,title,message,notification_level,notification_type);
+    }
+    public ArrayList<NotificationResponse> getNotificationsForClinic(String name) {
+        return null;
+    }
 }

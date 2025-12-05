@@ -49,11 +49,26 @@ CREATE TABLE IF NOT EXISTS otp_codes (
 CREATE TABLE IF NOT EXISTS clinics (
     clinic_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     clinic_name VARCHAR(255) NOT NULL,
+    region VARCHAR(255) NOT NULL,
     address TEXT,
-    user_email VARCHAR(255),
+    clinic_email VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     verified BOOLEAN DEFAULT FALSE,
     license_no TEXT
+);
+-- Permissions Table
+CREATE TABLE IF NOT EXISTS permissions (
+    permissions_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+    clinic_id UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
+    clinic_email VARCHAR(50) NOT NULL,
+    access_type VARCHAR(50) NOT NULL,
+    granted_at TIMESTAMP,
+    expires_at TIMESTAMP,
+    status     TEXT,
+    granted BOOLEAN DEFAULT FALSE,
+    revoked BOOLEAN DEFAULT FALSE,
+    revoked_at TIMESTAMP
 );
 
 -- Medical Records Table
@@ -68,6 +83,7 @@ CREATE TABLE IF NOT EXISTS medical_records (
     blockchain_tx_hash TEXT,
     block_number TEXT,
     verified BOOLEAN,
+    diagnosis TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
 
@@ -78,23 +94,11 @@ CREATE TABLE IF NOT EXISTS medical_records_shared_with (
     clinic_id UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE
 );
 
--- Permissions Table
-CREATE TABLE IF NOT EXISTS permissions (
-    permissions_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-    clinic_id UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
-    access_type VARCHAR(50) NOT NULL,
-    granted_at TIMESTAMP,
-    expires_at TIMESTAMP,
-    granted BOOLEAN DEFAULT FALSE,
-    revoked BOOLEAN DEFAULT FALSE,
-    revoked_at TIMESTAMP
-);
-
 -- Notifications Table
 CREATE TABLE IF NOT EXISTS notifications (
     notification_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+    clinic_email VARCHAR(255) NOT NULL REFERENCES clinic(clinic_email) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     notification_level VARCHAR(100),
@@ -124,8 +128,9 @@ CREATE TABLE IF NOT EXISTS notification_fanout_log (
 -- Audit Logs Table
 CREATE TABLE IF NOT EXISTS audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(user_id),
-    action VARCHAR(255) NOT NULL,
+    actor_type TEXT NOT NULL,
+    actor_reference TEXT NOT NULL,
+    action_performed VARCHAR(255) NOT NULL,
     details TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );

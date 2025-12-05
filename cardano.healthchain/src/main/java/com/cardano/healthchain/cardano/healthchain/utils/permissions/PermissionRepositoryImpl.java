@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @Repository
@@ -20,7 +19,7 @@ public class PermissionRepositoryImpl implements PermissionRepositoryI{
     public ArrayList<PermissionResponse> getPermittedClinicsForUser(String user_email, int page) {
         int pageNumber = Math.max(page, 1); // at least 1
         int offset = (pageNumber - 1) * 5;
-        String getPermittedClinicsSql = "SELECT o.*, u.* FROM permissions o JOIN clinics u ON o.clinic_id = u.clinic_id WHERE email = ? ORDER BY u.clinic_id LIMIT 5 OFFSET ?";
+        String getPermittedClinicsSql = "SELECT o.*, u.* FROM permissions o JOIN clinics u ON o.clinic_id = u.clinic_id WHERE email = ? AND granted = true ORDER BY o.granted_at DESC LIMIT 5 OFFSET ?";
         Object[] args = new Object[]{user_email,offset};
         return (ArrayList<PermissionResponse>) jdbcTemplate.query(
                 getPermittedClinicsSql,
@@ -47,6 +46,16 @@ public class PermissionRepositoryImpl implements PermissionRepositoryI{
         //log number of rows updated
     }
 
+    @Override
+    public void clinicRequestUserPermission(String clinicEmail, String userEmail, String accessType) {
+
+    }
+    @Override
+    public ArrayList<PermissionResponse> getClinicPermissionRequests(String userEmail, int page) {
+        int offset = (page - 1) * 5;
+        String getClinicPermissionRequestsSqlStatement = "SELECT * FROM permissions where email = ? AND revoked = false AND granted = false ORDER BY permissions_id OFFSET ? LIMIT 5";
+        return (ArrayList<PermissionResponse>) jdbcTemplate.query(getClinicPermissionRequestsSqlStatement,new BeanPropertyRowMapper<>(PermissionResponse.class), userEmail,offset);
+    }
     @Override
     public void deletePermissionRequestByClinic(String user_email, String clinicId) {
         String permitClinicSqlStatement = "DELETE from permissions WHERE email = ? AND clinic_id = ?";
