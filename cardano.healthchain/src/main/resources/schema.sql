@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS medical_records_shared_with (
 CREATE TABLE IF NOT EXISTS notifications (
     notification_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-    clinic_email VARCHAR(255) NOT NULL REFERENCES clinic(clinic_email) ON DELETE CASCADE,
+    clinic_email VARCHAR(255) NOT NULL REFERENCES clinics(clinic_email) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     notification_level VARCHAR(100),
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     actor_type TEXT NOT NULL,
     actor_reference TEXT NOT NULL,
-    action_performed VARCHAR(255) NOT NULL,
+    action_performed VARCHAR(255),
     details TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );

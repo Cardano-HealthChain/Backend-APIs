@@ -133,7 +133,7 @@ public class UserController {
         return medicalDataService.getVerifiedRecordsCountForUser(principal.getName());
     }
     @GetMapping("clinics_visited")
-    public int getTotalClinicRecordSharedWith(Principal principal){
+    public int getTotalClinicRecordSharedWith(Principal principal, @RequestParam int page){
         return clinicService.getTotalClinicsVisitedByUser(principal.getName());
     }
     @GetMapping("audit")

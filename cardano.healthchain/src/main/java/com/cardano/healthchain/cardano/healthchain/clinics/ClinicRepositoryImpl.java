@@ -17,7 +17,7 @@ public class ClinicRepositoryImpl implements ClinicRepositoryI{
 
     @Override
     public int getTotalClinicsVisitedByUser(String user_email) {
-        String getTotalClinicsVisitedByUserSqlStatement = "SELECT COUNT(*) FROM medical_records_shared_with where user_email = ?";
+        String getTotalClinicsVisitedByUserSqlStatement = "SELECT COUNT(*) FROM medical_records_shared_with WHERE user_email = ?";
         return jdbcTemplate.queryForObject(getTotalClinicsVisitedByUserSqlStatement,Integer.class,new Object[]{user_email} );
     }
     @Override

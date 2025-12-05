@@ -10,12 +10,12 @@ services:
     ports:
       - "3000:5432"
     volumes:
-      - healthchain_pg_data:/var/lib/postgresql/data
+      - healthchain_data:/var/lib/postgresql/data
     networks:
       - healthchain_network
 
 volumes:
-  healthchain_pg_data:
+  healthchain_data:
 
 networks:
   healthchain_network:
