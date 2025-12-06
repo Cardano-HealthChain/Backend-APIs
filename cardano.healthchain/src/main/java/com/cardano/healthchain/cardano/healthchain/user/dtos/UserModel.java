@@ -1,5 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.user.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 public class UserModel {
     private String email;
+    @JsonIgnore
     private String hashed_password;
     private String first_name;
     private String last_name;
@@ -16,7 +18,7 @@ public class UserModel {
     private LocalDate dob;
     private String gender;
     private String address;
-    private String bloodType;
+    private String blood_type;
     private String genotype;
     private String known_allergies;
     private String pre_existing_conditions;
@@ -29,7 +31,7 @@ public class UserModel {
     private boolean verified;
     private String role;
 
-    public UserModel(String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String bloodType, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String role) {
+    public UserModel(String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String blood_type, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String role) {
         this.email = email;
         this.hashed_password = hashed_password;
         this.first_name = first_name;
@@ -38,7 +40,7 @@ public class UserModel {
         this.dob = dob;
         this.gender = gender;
         this.address = address;
-        this.bloodType = bloodType;
+        this.blood_type = blood_type;
         this.genotype = genotype;
         this.known_allergies = known_allergies;
         this.pre_existing_conditions = pre_existing_conditions;
@@ -118,12 +120,12 @@ public class UserModel {
         this.address = address;
     }
 
-    public String getBloodType() {
-        return bloodType;
+    public String getBlood_type() {
+        return blood_type;
     }
 
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
+    public void setBlood_type(String blood_type) {
+        this.blood_type = blood_type;
     }
 
     public String getGenotype() {
