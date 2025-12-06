@@ -116,4 +116,8 @@ public class UserService {
     public void deleteAccount(String email) {
         userRepository.deleteUserByEmail(email);
     }
+
+    public UserModel getUserByEmail(String user_email) {
+        return userRepository.getUserByEmail(user_email);
+    }
 }
