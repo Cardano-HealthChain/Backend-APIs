@@ -11,12 +11,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class UserUpdateProfilePersonalDetails {
-    @NotBlank(message = "First name is required")
-    private String first_name;
-    @NotBlank(message = "Last name is required")
-    private String last_name;
-    @NotNull(message = "Date of birth is required")    private LocalDate dob;
-    private String gender;
+   private String first_name;
+   private String last_name;
+   private LocalDate dob;
+   private String gender;
 
     public String getFirst_name() {
         return first_name;
