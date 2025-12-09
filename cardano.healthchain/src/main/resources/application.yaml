@@ -1,16 +1,31 @@
 spring:
+  profiles:
+    active:
+
+---
+spring:
+  profiles: prod
   application:
-    name: cardano.healthchain
+    name: cardano.healthchain.production
   server:
     port: ${PORT:8080}
   web:
     resources:
       add-mappings: false
   sql:
-    initialization:
-      mode: always
     init:
       mode: always
-springdoc:
-  swagger-ui:
-    enabled: true
+
+---
+spring:
+  profiles: dev
+  application:
+    name: cardano.healthchain.dev
+  server:
+    port: 3000
+  web:
+    resources:
+      add-mappings: true
+  sql:
+    init:
+      mode: always
