@@ -48,6 +48,10 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
     ) throws IOException {
         String email = authResult.getName();
         String token = jwtService.generateToken(email);
+<<<<<<< HEAD
+=======
+        // Return token in JSON response body only
+>>>>>>> 5623215d11267dcae8a927e962ce6991b834137f
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write("{\"token\": \"" + token + "\"}");
     }
