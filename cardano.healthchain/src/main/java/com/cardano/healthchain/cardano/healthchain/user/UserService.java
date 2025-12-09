@@ -93,7 +93,7 @@ public class UserService {
 // Basic Health Information
         if (user.getGender() != null && !user.getGender().isEmpty()) filled++;
         if (user.getAddress() != null && !user.getAddress().isEmpty()) filled++;
-        if (user.getBloodType() != null && !user.getBloodType().isEmpty()) filled++;
+        if (user.getBlood_type() != null && !user.getBlood_type().isEmpty()) filled++;
         if (user.getGenotype() != null && !user.getGenotype().isEmpty()) filled++;
         if (user.getKnown_allergies() != null && !user.getKnown_allergies().isEmpty()) filled++;
         if (user.getPre_existing_conditions() != null && !user.getPre_existing_conditions().isEmpty()) filled++;
