@@ -1,10 +1,5 @@
 package com.cardano.healthchain.cardano.healthchain.user.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 public class UserModel {
@@ -16,7 +11,7 @@ public class UserModel {
     private LocalDate dob;
     private String gender;
     private String address;
-    private String bloodType;
+    private String blood_type;
     private String genotype;
     private String known_allergies;
     private String pre_existing_conditions;
@@ -38,7 +33,7 @@ public class UserModel {
         this.dob = dob;
         this.gender = gender;
         this.address = address;
-        this.bloodType = bloodType;
+        this.blood_type = bloodType;
         this.genotype = genotype;
         this.known_allergies = known_allergies;
         this.pre_existing_conditions = pre_existing_conditions;
@@ -118,12 +113,12 @@ public class UserModel {
         this.address = address;
     }
 
-    public String getBloodType() {
-        return bloodType;
+    public String getBlood_type() {
+        return blood_type;
     }
 
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
+    public void setBlood_type(String blood_type) {
+        this.blood_type = blood_type;
     }
 
     public String getGenotype() {
