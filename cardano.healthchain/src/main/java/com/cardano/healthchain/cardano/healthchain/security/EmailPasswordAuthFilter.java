@@ -48,7 +48,7 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
     ) throws IOException {
         String email = authResult.getName();
         String token = jwtService.generateToken(email);
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        // Return token in JSON response body only
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write("{\"token\": \"" + token + "\"}");
     }
