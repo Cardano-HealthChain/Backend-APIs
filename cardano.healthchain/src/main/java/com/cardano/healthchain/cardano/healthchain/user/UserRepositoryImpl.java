@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 @Repository
 public class UserRepositoryImpl implements UserRepositoryI{
     private final JdbcTemplate jdbcTemplate;
@@ -33,8 +32,8 @@ public class UserRepositoryImpl implements UserRepositoryI{
     public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
         String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET first_name = ?,last_name = ? ,gender = ?,dob = ? WHERE email = ?";
         Object[] args = new Object[]{
-                userUpdateProfilePersonalDetails.getFirst_name(),
-                userUpdateProfilePersonalDetails.getLast_name(),
+                userUpdateProfilePersonalDetails.getFirstname(),
+                userUpdateProfilePersonalDetails.getLastname(),
                 userUpdateProfilePersonalDetails.getGender(),
                 userUpdateProfilePersonalDetails.getDob(),
                 email

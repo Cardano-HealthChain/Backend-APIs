@@ -1,35 +1,37 @@
 package com.cardano.healthchain.cardano.healthchain.user.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@Builder
 public class UserUpdateProfilePersonalDetails {
-   private String first_name;
-   private String last_name;
+   private String firstname;
+   private String lastname;
    private LocalDate dob;
    private String gender;
 
-    public String getFirst_name() {
-        return first_name;
+    public UserUpdateProfilePersonalDetails(String firstname, String lastname, LocalDate dob, String gender) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dob = dob;
+        this.gender = gender;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public UserUpdateProfilePersonalDetails() {
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public LocalDate getDob() {
