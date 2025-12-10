@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     public EmailPasswordAuthFilter(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -49,6 +52,7 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO(token, authResult.getAuthorities().stream().findFirst().toString().toLowerCase());
         String responseLoginDTO = new ObjectMapper().writeValueAsString(loginResponseDTO);
+        logger.info(String.format("login attempt made for: %s and response was: %s",email,responseLoginDTO));
         response.getWriter().write(responseLoginDTO);
     }
 }
