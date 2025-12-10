@@ -30,10 +30,8 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
     @Override
     public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
-        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET first_name = ?,last_name = ? ,gender = ?,dob = ? WHERE email = ?";
+        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET gender = ?,dob = ? WHERE email = ?";
         Object[] args = new Object[]{
-                userUpdateProfilePersonalDetails.getFirstname(),
-                userUpdateProfilePersonalDetails.getLastname(),
                 userUpdateProfilePersonalDetails.getGender(),
                 userUpdateProfilePersonalDetails.getDob(),
                 email
