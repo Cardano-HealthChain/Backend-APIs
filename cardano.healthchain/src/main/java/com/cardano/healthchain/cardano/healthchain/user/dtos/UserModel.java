@@ -1,9 +1,12 @@
 package com.cardano.healthchain.cardano.healthchain.user.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 public class UserModel {
     private String email;
+    @JsonIgnore
     private String hashed_password;
     private String first_name;
     private String last_name;
