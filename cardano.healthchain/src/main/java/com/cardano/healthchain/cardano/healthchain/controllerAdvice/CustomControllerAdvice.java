@@ -53,7 +53,7 @@ public class CustomControllerAdvice {
         System.out.println(ex.getMessage());
         System.out.println(ex.getStackTrace());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("INTERNAL_ERROR","Something went wrong. Please try again."));
+                .body(new ErrorResponse("INTERNAL_ERROR",ex.getMessage()));
     }
     @ExceptionHandler(OtpException.class)
     public ResponseEntity<ErrorResponse> handleOtpException(OtpException ex) {
