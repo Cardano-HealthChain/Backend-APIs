@@ -45,13 +45,13 @@ public class UserController {
     public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
         return userService.createUser(userCreateRequest);
     }
-    @GetMapping("profile_completion")
-    public int getProfileCompletionLevel(Principal principal){
-        return userService.getProfileCompletionLevel(principal.getName());
-    }
     @GetMapping("profile_data")
     public UserModel getUSerByEmail(Principal principal){
         return userService.getUserByEmail(principal.getName());
+    }
+    @GetMapping("profile_completion")
+    public int getProfileCompletionLevel(Principal principal){
+        return userService.getProfileCompletionLevel(principal.getName());
     }
     @PostMapping("otp/validate")
     public UserCreateResponse validateUserOtp(@RequestParam String otpcode, @RequestParam String user_email){

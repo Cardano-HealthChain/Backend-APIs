@@ -4,11 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
-@Builder
-@AllArgsConstructor
 public class UserCreateRequest {
     @NotBlank(message = "Email is Required")
     @Email(message = "Please provide a valid email")
@@ -32,6 +28,16 @@ public class UserCreateRequest {
             message = "Last name can only contain letters, spaces, apostrophes, dots and hyphens"
     )
     private String lastname;
+
+    public UserCreateRequest(String email, String password, String firstname, String lastname) {
+        this.email = email;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
+    public UserCreateRequest() {
+    }
 
     public String getEmail() {
         return email;

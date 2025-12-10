@@ -54,6 +54,7 @@ public class UserService {
         userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetails, user_email);
         auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"Profile Update","Update Profile with Personal details");
         logger.info("Personal data profile completion stage is successful");
+        logger.info(userUpdateProfilePersonalDetails.getFirstname().concat(" ").concat(userUpdateProfilePersonalDetails.getLastname()));
     }
     @Transactional
     public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String user_email) {
