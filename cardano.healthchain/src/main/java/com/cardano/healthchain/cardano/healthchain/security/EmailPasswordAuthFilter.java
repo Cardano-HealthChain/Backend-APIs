@@ -50,7 +50,7 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
         String email = authResult.getName();
         String token = jwtService.generateToken(email);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(token, authResult.getAuthorities().stream().findFirst().toString().toLowerCase());
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(token, authResult.getAuthorities().stream().findFirst().orElse(null).toString().toLowerCase());
         String responseLoginDTO = new ObjectMapper().writeValueAsString(loginResponseDTO);
         logger.info(String.format("login attempt made for: %s and response was: %s",email,responseLoginDTO));
         response.getWriter().write(responseLoginDTO);
