@@ -1,6 +1,5 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
-import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryImpl;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.UserModel;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
@@ -52,13 +51,13 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             return;
         }
 
-        String email = jwtService.extractUsername(token);
+        String user_id = jwtService.extractUserId(token).toString();
 
         // Avoid overwriting existing authentication
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (user_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             // Fetch user from DB
-            UserModel user = userRepository.getUserByEmail(email);
+            UserModel user = userRepository.getUserById(user_id);
             if (user == null) {
                 filterChain.doFilter(request, response);
                 return;
@@ -66,7 +65,7 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             // Convert DB role to Spring Security authority
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase());
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user.getEmail(),
+                            user.getUser_id(),
                             null,
                             List.of(authority)
                     );
