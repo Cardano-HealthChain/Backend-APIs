@@ -43,11 +43,11 @@ public class UserController {
     }
     @PostMapping("signup")
     public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
-        return userService.createUser(userCreateRequest);
+        return userService.createUserWithEmail(userCreateRequest);
     }
     @GetMapping("profile_data")
-    public UserModel getUSerByEmail(Principal principal){
-        return userService.getUserByEmail(principal.getName());
+    public UserModel getUSerById(Principal principal){
+        return userService.getUserById(principal.getName());
     }
     @GetMapping("profile_completion")
     public int getProfileCompletionLevel(Principal principal){

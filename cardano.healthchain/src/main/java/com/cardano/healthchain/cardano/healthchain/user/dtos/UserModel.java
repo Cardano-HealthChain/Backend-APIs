@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 public class UserModel {
+    @JsonIgnore
+    private UUID user_id;
     private String email;
     @JsonIgnore
     private String hashed_password;
@@ -27,7 +31,10 @@ public class UserModel {
     private boolean verified;
     private String role;
 
-    public UserModel(String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String bloodType, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String role) {
+    public UserModel() {
+    }
+
+    public UserModel(UUID user_id, String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String blood_type, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String role) {        this.user_id = user_id;
         this.email = email;
         this.hashed_password = hashed_password;
         this.first_name = first_name;
@@ -36,7 +43,7 @@ public class UserModel {
         this.dob = dob;
         this.gender = gender;
         this.address = address;
-        this.blood_type = bloodType;
+        this.blood_type = blood_type;
         this.genotype = genotype;
         this.known_allergies = known_allergies;
         this.pre_existing_conditions = pre_existing_conditions;
@@ -49,7 +56,12 @@ public class UserModel {
         this.verified = verified;
         this.role = role;
     }
-    public UserModel() {
+    public UUID getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(UUID user_id) {
+        this.user_id = user_id;
     }
 
     public String getEmail() {

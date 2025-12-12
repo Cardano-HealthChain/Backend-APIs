@@ -58,8 +58,8 @@ public class MedicalDataService {
         logger.info(String.format("Medical records for user with user_email: %s was successfully verified on the blockchain and returned", user_email));
         return medicalRecordsForUser;
     }
-    public int getVerifiedRecordsCountForUser(String user_email) {
-        return medicalDataRepository.getVerifiedRecordCountForUser(user_email);
+    public int getVerifiedRecordsCountForUser(String user_id) {
+        return medicalDataRepository.getVerifiedRecordCountForUser(user_id);
     }
     public void recordPermissionSharedWithClinic(String user_email, String clinicId) {
         medicalDataRepository.recordPermissionSharedWithClinic(user_email,clinicId);

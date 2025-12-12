@@ -1,8 +1,8 @@
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (
     user_id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email                       VARCHAR(255) UNIQUE NOT NULL,
-    hashed_password             TEXT NOT NULL,
+    email                       VARCHAR(255) UNIQUE,
+    hashed_password             TEXT,
     first_name                  VARCHAR(255),
     last_name                   VARCHAR(255),
     phone_number                VARCHAR(50),
@@ -20,9 +20,15 @@ CREATE TABLE IF NOT EXISTS users (
     state_of_origin             VARCHAR(100),
     created_at                  TIMESTAMP DEFAULT NOW(),
     verified                    BOOLEAN DEFAULT FALSE,
-    role                        TEXT
+    role                        TEXT,
+-- wallet information
+    wallet_address              TEXT UNIQUE,
+    stake_address               TEXT UNIQUE,
+    public_key                  TEXT,
+    wallet_verified_at          TIMESTAMP,
+    wallet_network              VARCHAR(20),
+    last_wallet_login           TIMESTAMP
 );
-
 -- User Sessions Table
 CREATE TABLE IF NOT EXISTS user_sessions (
     session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -58,40 +64,40 @@ CREATE TABLE IF NOT EXISTS clinics (
 );
 -- Permissions Table
 CREATE TABLE IF NOT EXISTS permissions (
-    permissions_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-    clinic_id UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
-    clinic_email VARCHAR(50) NOT NULL,
-    access_type VARCHAR(50) NOT NULL,
-    granted_at TIMESTAMP,
-    expires_at TIMESTAMP,
-    status     TEXT,
-    granted BOOLEAN DEFAULT FALSE,
-    revoked BOOLEAN DEFAULT FALSE,
-    revoked_at TIMESTAMP
+    permissions_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id             VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    clinic_id UUID      NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
+    clinic_email        VARCHAR(50) NOT NULL,
+    access_type         VARCHAR(50) NOT NULL,
+    granted_at          TIMESTAMP,
+    expires_at          TIMESTAMP,
+    status              TEXT,
+    granted             BOOLEAN DEFAULT FALSE,
+    revoked             BOOLEAN DEFAULT FALSE,
+    revoked_at          TIMESTAMP
 );
 
 -- Medical Records Table
 CREATE TABLE IF NOT EXISTS medical_records (
-    record_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-    record_type VARCHAR(100),
-    record_data TEXT NOT NULL,
-    clinic_name VARCHAR(100),
-    hash_local TEXT NOT NULL,
-    blockchain_tx_id TEXT,
-    blockchain_tx_hash TEXT,
-    block_number TEXT,
-    verified BOOLEAN,
-    diagnosis TEXT,
-    created_at TIMESTAMP DEFAULT NOW()
+    record_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id             VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    record_type         VARCHAR(100),
+    record_data         TEXT NOT NULL,
+    clinic_name         VARCHAR(100),
+    hash_local          TEXT NOT NULL,
+    blockchain_tx_id    TEXT,
+    blockchain_tx_hash  TEXT,
+    block_number        TEXT,
+    verified            BOOLEAN,
+    diagnosis           TEXT,
+    created_at          TIMESTAMP DEFAULT NOW()
 );
 
 -- Shared Medical Records Table
 CREATE TABLE IF NOT EXISTS medical_records_shared_with (
-    shared_with_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_email TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-    clinic_id UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE
+    shared_with_id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id                 TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    clinic_id               UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE
 );
 
 -- Notifications Table

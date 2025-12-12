@@ -11,7 +11,7 @@ public interface MedicalDataRepositoryI {
 
     MedicalDataResponse getMedicalRecordById(String recordId);
 
-    int getVerifiedRecordCountForUser(String email);
+    int getVerifiedRecordCountForUser(String user_id);
 
     void recordPermissionSharedWithClinic(String email, String clinicId);
 }

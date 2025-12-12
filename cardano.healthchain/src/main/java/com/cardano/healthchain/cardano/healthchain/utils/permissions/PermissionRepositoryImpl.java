@@ -39,9 +39,9 @@ public class PermissionRepositoryImpl implements PermissionRepositoryI{
         );
     }
     @Override
-    public void revokeClinicPermissionForUser(String clinicId, String user_email) {
-        String permitClinicSqlStatement = "UPDATE permissions set revoked = true, revoked_at = ? WHERE email = ? AND clinic_id = ?";
-        Object[] args = new Object[]{Instant.now(), user_email,clinicId};
+    public void revokeClinicPermissionForUser(String clinicId, String user_id) {
+        String permitClinicSqlStatement = "UPDATE permissions set revoked = true, revoked_at = ? WHERE user_id = ? AND clinic_id = ?";
+        Object[] args = new Object[]{Instant.now(), user_id,clinicId};
         int update = jdbcTemplate.update(permitClinicSqlStatement, args);
         //log number of rows updated
     }
@@ -65,9 +65,9 @@ public class PermissionRepositoryImpl implements PermissionRepositoryI{
     }
 
     @Override
-    public void permitClinic(String clinicId, String user_email, Instant Expires, String permissionAccessScopes) {
-        String permitClinicSqlStatement = "UPDATE permissions set granted = true, granted_at = ?, access_type = ?,expires_at = ? WHERE email = ? AND clinic_id = ?";
-        Object[] args = new Object[]{Instant.now(), permissionAccessScopes, LocalDateTime.now().plusDays(1),user_email,clinicId};
+    public void permitClinic(String clinicId, String user_id, Instant Expires, String permissionAccessScopes) {
+        String permitClinicSqlStatement = "UPDATE permissions set granted = true, granted_at = ?, access_type = ?,expires_at = ? WHERE user_id = ? AND clinic_id = ?";
+        Object[] args = new Object[]{Instant.now(), permissionAccessScopes, LocalDateTime.now().plusDays(1),user_id,clinicId};
         int update = jdbcTemplate.update(permitClinicSqlStatement, args);
     }
 

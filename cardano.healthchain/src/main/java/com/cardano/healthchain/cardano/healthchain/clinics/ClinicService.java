@@ -26,8 +26,8 @@ public class ClinicService {
         this.permissionService = permissionService;
         this.blockChainService = blockChainService;
     }
-    public int getTotalClinicsVisitedByUser(String user_email) {
-        return clinicRepository.getTotalClinicsVisitedByUser(user_email);
+    public int getTotalClinicsVisitedByUser(String user_id) {
+        return clinicRepository.getTotalClinicsVisitedByUser(user_id);
     }
 
     public ClinicCreateResponse signUp(ClinicCreateRequest clinicCreateRequest) {

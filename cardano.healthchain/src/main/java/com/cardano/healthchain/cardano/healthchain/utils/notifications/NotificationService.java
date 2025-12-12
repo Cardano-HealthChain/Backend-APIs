@@ -11,8 +11,8 @@ public class NotificationService {
     public NotificationService(NotificationRepositoryImpl notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
-    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String user_email) {
-        return notificationRepository.getNotificationsForUser(page, user_email);
+    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String user_id) {
+        return notificationRepository.getNotificationsForUser(page, user_id);
     }
 
     public void markNotificationAsRead(String notificationId) {

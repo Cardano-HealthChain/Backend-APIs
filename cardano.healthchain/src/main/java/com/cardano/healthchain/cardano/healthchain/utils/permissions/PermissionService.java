@@ -34,14 +34,14 @@ public class PermissionService {
         return permissionRepository.getRequestedPermissionsByClinic(clinicId, page);
     }
     @Transactional
-    public void permitClinic(String clinicId, String user_email, String permissionAccessScope) {
-        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"resident permitted a clinic", "");
-        permissionRepository.permitClinic(clinicId, user_email, Instant.now().plus(1, ChronoUnit.DAYS), permissionAccessScope);
-        medicalDataService.recordPermissionSharedWithClinic(user_email,clinicId);
+    public void permitClinic(String clinicId, String user_id, String permissionAccessScope) {
+        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_id,"resident permitted a clinic", "");
+        permissionRepository.permitClinic(clinicId, user_id, Instant.now().plus(1, ChronoUnit.DAYS), permissionAccessScope);
+        medicalDataService.recordPermissionSharedWithClinic(user_id,clinicId);
     }
-    public void revokeClinicPermissionForUser(String clinicId, String user_email) {
-        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_email,"resident revoked a clinic permission", "");
-        permissionRepository.revokeClinicPermissionForUser(clinicId, user_email);
+    public void revokeClinicPermissionForUser(String clinicId, String user_id) {
+        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_id,"resident revoked a clinic permission", "");
+        permissionRepository.revokeClinicPermissionForUser(clinicId, user_id);
     }
     public boolean deletePermissionRequestByClinic(String user_email, String clinicId) {
         permissionRepository.deletePermissionRequestByClinic(user_email,clinicId);

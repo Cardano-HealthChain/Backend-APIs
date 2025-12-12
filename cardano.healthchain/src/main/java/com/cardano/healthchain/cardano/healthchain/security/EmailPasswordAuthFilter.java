@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
     public EmailPasswordAuthFilter(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
-        setFilterProcessesUrl("/auth/login"); // POST /auth/login
+        setFilterProcessesUrl("/auth/login"); // POST /auth/login for logging in with emails
     }
 
     @Override
@@ -47,12 +48,20 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authResult
     ) throws IOException {
-        String email = authResult.getName();
-        String token = jwtService.generateToken(email);
+        String user_id = authResult.getName();
+        String role = authResult.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)  // extract the authority string
+                .findFirst()
+                .orElse(null);
+        String token = jwtService.generateTokenWithUserId(
+                user_id,
+                role,
+                Map.of()
+        );
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO(token, authResult.getAuthorities().stream().findFirst().orElse(null).toString().toLowerCase());
         String responseLoginDTO = new ObjectMapper().writeValueAsString(loginResponseDTO);
-        logger.info(String.format("login attempt made for: %s and response was: %s",email,responseLoginDTO));
+        logger.info(String.format("login attempt made for: %s and response was: %s",user_id,responseLoginDTO));
         response.getWriter().write(responseLoginDTO);
     }
 }

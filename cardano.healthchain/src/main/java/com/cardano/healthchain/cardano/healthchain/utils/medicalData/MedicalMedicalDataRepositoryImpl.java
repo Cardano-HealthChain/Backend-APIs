@@ -36,9 +36,9 @@ public class MedicalMedicalDataRepositoryImpl implements MedicalDataRepositoryI 
         return jdbcTemplate.queryForObject(getMedicalRecordByIdSqlStatement,new BeanPropertyRowMapper<>(MedicalDataResponse.class),args);
     }
     @Override
-    public int getVerifiedRecordCountForUser(String email) {
-        String getVerifiedRecordCountSqlStatement = "SELECT COUNT(*) FROM medical_records where user_email = ? and verified = TRUE";
-        return jdbcTemplate.queryForObject(getVerifiedRecordCountSqlStatement,Integer.class,new Object[]{email} );
+    public int getVerifiedRecordCountForUser(String user_id) {
+        String getVerifiedRecordCountSqlStatement = "SELECT COUNT(*) FROM medical_records where user_id = ? and verified = TRUE";
+        return jdbcTemplate.queryForObject(getVerifiedRecordCountSqlStatement,Integer.class,new Object[]{user_id} );
     }
     @Override
     public void recordPermissionSharedWithClinic(String email, String clinicId) {

@@ -1,11 +1,14 @@
 package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
+import com.cardano.healthchain.cardano.healthchain.utils.HEALTHCHAIN_ROLES;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
+
 @Repository
 public class UserRepositoryImpl implements UserRepositoryI{
     private final JdbcTemplate jdbcTemplate;
@@ -22,52 +25,68 @@ public class UserRepositoryImpl implements UserRepositoryI{
         );
         return users.isEmpty() ? null : users.get(0);
     }
+
     @Override
-    public void createUser(UserCreateRequest userCreateRequest) {
-        String SQL_USER_CREATION_STRING = "INSERT INTO users (email,hashed_password,first_name,last_name,role) VALUES (?,?,?,?,?)";
-        Object[] args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname(),"RESIDENT"};
-        jdbcTemplate.update(SQL_USER_CREATION_STRING,args);
+    public UserModel getUserById(String user_id) {
+        String sql = "SELECT * FROM users WHERE user_Id = ?";
+        List<UserModel> users = jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(UserModel.class),
+                user_id
+        );
+        return users.isEmpty() ? null : users.get(0);
+    }
+
+    @Override
+    public UUID createUser(UserCreateRequest userCreateRequest) {
+        String sql = "INSERT INTO users (email, hashed_password, first_name, last_name, role) VALUES (?, ?, ?, ?, ?) RETURNING user_id";
+        Object[] args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname(), HEALTHCHAIN_ROLES.RESIDENT.name()};
+        return jdbcTemplate.queryForObject(
+                sql,
+                args,
+                UUID.class
+        );
     }
     @Override
-    public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String email) {
-        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET gender = ?,dob = ? WHERE email = ?";
+    public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_id) {
+        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET gender = ?,dob = ? WHERE user_id = ?";
         Object[] args = new Object[]{
                 userUpdateProfilePersonalDetails.getGender(),
                 userUpdateProfilePersonalDetails.getDob(),
-                email
+                user_id
         };
         jdbcTemplate.update(SQL_USER_UPDATE_PERSONAL, args);
     }
     @Override
-    public void updateUserProfileHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String email) {
-        String SQL_USER_UPDATE_HEALTH = "UPDATE users SET blood_type = ?,genotype = ?,known_allergies = ?,pre_existing_conditions = ? WHERE email = ?";
+    public void updateUserProfileHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String user_id) {
+        String SQL_USER_UPDATE_HEALTH = "UPDATE users SET blood_type = ?,genotype = ?,known_allergies = ?,pre_existing_conditions = ? WHERE user_id = ?";
         Object[] args = new Object[]{
                 userUpdateProfileHealthInformation.getBlood_type(),
                 userUpdateProfileHealthInformation.getGenotype(),
                 userUpdateProfileHealthInformation.getKnown_allergies(),
                 userUpdateProfileHealthInformation.getPre_existing_conditions(),
-                email
+                user_id
         };
         jdbcTemplate.update(SQL_USER_UPDATE_HEALTH, args);
     }
     @Override
-    public void updateUserProfileEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String email) {
-        String SQL_USER_UPDATE_EMERGENCY = "UPDATE users SET emergency_contact_name = ?,emergency_contact_phone = ?,emergency_contact_rel = ? WHERE email = ?";
+    public void updateUserProfileEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String user_id) {
+        String SQL_USER_UPDATE_EMERGENCY = "UPDATE users SET emergency_contact_name = ?,emergency_contact_phone = ?,emergency_contact_rel = ? WHERE user_id = ?";
         Object[] args = new Object[]{
                 userUpdateEmergencyInformation.getName(),
                 userUpdateEmergencyInformation.getRelationship(),
                 userUpdateEmergencyInformation.getPhone_number(),
-                email
+                user_id
         };
         jdbcTemplate.update(SQL_USER_UPDATE_EMERGENCY, args);
     }
     @Override
-    public void updateUserProfileLocationData(UserUpdateLocationData userUpdateLocationData, String email) {
-        String SQL_USER_UPDATE_LOCATION = "UPDATE users SET nationality = ?, state_of_origin = ? WHERE email = ?";
+    public void updateUserProfileLocationData(UserUpdateLocationData userUpdateLocationData, String user_id) {
+        String SQL_USER_UPDATE_LOCATION = "UPDATE users SET nationality = ?, state_of_origin = ? WHERE user_id = ?";
         Object[] args = new Object[]{
                 userUpdateLocationData.getCountry(),
                 userUpdateLocationData.getState(),
-                email
+                user_id
         };
         jdbcTemplate.update(SQL_USER_UPDATE_LOCATION, args);
     }
@@ -80,5 +99,11 @@ public class UserRepositoryImpl implements UserRepositoryI{
     public void deleteUserByEmail(String email) {
         String sql = "DELETE FROM users where email = ?";
         jdbcTemplate.update(sql,email);
+    }
+
+    @Override
+    public void deleteUserById(String user_id) {
+        String sql = "DELETE FROM users where user_id = ?";
+        jdbcTemplate.update(sql,user_id);
     }
 }
