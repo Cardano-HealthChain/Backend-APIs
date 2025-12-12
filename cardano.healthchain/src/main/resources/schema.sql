@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS clinics (
 -- Permissions Table
 CREATE TABLE IF NOT EXISTS permissions (
     permissions_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id             VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id             UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     clinic_id UUID      NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
     clinic_email        VARCHAR(50) NOT NULL,
     access_type         VARCHAR(50) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS permissions (
 -- Medical Records Table
 CREATE TABLE IF NOT EXISTS medical_records (
     record_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id             VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id             UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     record_type         VARCHAR(100),
     record_data         TEXT NOT NULL,
     clinic_name         VARCHAR(100),
@@ -96,21 +96,21 @@ CREATE TABLE IF NOT EXISTS medical_records (
 -- Shared Medical Records Table
 CREATE TABLE IF NOT EXISTS medical_records_shared_with (
     shared_with_id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id                 TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id                 UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     clinic_id               UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE
 );
 
 -- Notifications Table
 CREATE TABLE IF NOT EXISTS notifications (
-    notification_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_email VARCHAR(255) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
-    clinic_email VARCHAR(255) NOT NULL REFERENCES clinics(clinic_email) ON DELETE CASCADE,
-    title VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    notification_level VARCHAR(100),
-    notification_type VARCHAR(100),
-    sent_at TIMESTAMP DEFAULT NOW(),
-    read_status BOOLEAN DEFAULT FALSE
+    notification_id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id                 UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    clinic_email            VARCHAR(255) NOT NULL REFERENCES clinics(clinic_email) ON DELETE CASCADE,
+    title                   VARCHAR(255) NOT NULL,
+    message                 TEXT NOT NULL,
+    notification_level      VARCHAR(100),
+    notification_type       VARCHAR(100),
+    sent_at                 TIMESTAMP DEFAULT NOW(),
+    read_status             BOOLEAN DEFAULT FALSE
 );
 
 -- Firebase Device Tokens Table
