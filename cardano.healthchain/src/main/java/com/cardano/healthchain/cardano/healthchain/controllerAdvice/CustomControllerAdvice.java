@@ -31,6 +31,7 @@ public class CustomControllerAdvice {
 //    // SQL syntax errors
     @ExceptionHandler(BadSqlGrammarException.class)
     public ResponseEntity<?> handleBadSql(BadSqlGrammarException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("INTERNAL_SQL_ERROR","An unexpected database error occurred."));
     }

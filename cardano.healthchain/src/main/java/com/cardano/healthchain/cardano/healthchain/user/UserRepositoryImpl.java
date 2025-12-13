@@ -51,11 +51,11 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
     @Override
     public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_id) {
-        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET gender = ?,dob = ? WHERE user_id = ?";
+        String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET gender = ?, dob = ? WHERE user_id = ?";
         Object[] args = new Object[]{
                 userUpdateProfilePersonalDetails.getGender(),
                 userUpdateProfilePersonalDetails.getDob(),
-                user_id
+                UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_PERSONAL, args);
     }
@@ -67,7 +67,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
                 userUpdateProfileHealthInformation.getGenotype(),
                 userUpdateProfileHealthInformation.getKnown_allergies(),
                 userUpdateProfileHealthInformation.getPre_existing_conditions(),
-                user_id
+                UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_HEALTH, args);
     }
@@ -78,7 +78,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
                 userUpdateEmergencyInformation.getName(),
                 userUpdateEmergencyInformation.getRelationship(),
                 userUpdateEmergencyInformation.getPhone_number(),
-                user_id
+                UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_EMERGENCY, args);
     }
@@ -88,7 +88,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
         Object[] args = new Object[]{
                 userUpdateLocationData.getCountry(),
                 userUpdateLocationData.getState(),
-                user_id
+                UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_LOCATION, args);
     }
