@@ -30,7 +30,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
 
     @Override
     public UserModel getUserById(String user_id) {
-        String sql = "SELECT * FROM users WHERE user_Id = ?";
+        String sql = "SELECT * FROM users WHERE user_id = ?";
         List<UserModel> users = jdbcTemplate.query(
                 sql,
                 new BeanPropertyRowMapper<>(UserModel.class),
