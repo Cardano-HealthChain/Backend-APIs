@@ -29,6 +29,13 @@ CREATE TABLE IF NOT EXISTS users (
     wallet_network              VARCHAR(20),
     last_wallet_login           TIMESTAMP
 );
+CREATE TABLE wallet_login_challenges (
+    wallet_address   VARCHAR(255) NOT NULL,
+    challenge        TEXT NOT NULL,
+    created_at       TIMESTAMP NOT NULL,
+    expires_at       TIMESTAMP NOT NULL,
+    PRIMARY KEY (wallet_address)
+);
 -- User Sessions Table
 CREATE TABLE IF NOT EXISTS user_sessions (
     session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

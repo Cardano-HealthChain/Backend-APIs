@@ -2,11 +2,13 @@ package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 import com.cardano.healthchain.cardano.healthchain.utils.HEALTHCHAIN_ROLES;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -105,5 +107,51 @@ public class UserRepositoryImpl implements UserRepositoryI{
     public void deleteUserById(String user_id) {
         String sql = "DELETE FROM users where user_id = ?";
         jdbcTemplate.update(sql,user_id);
+    }
+
+    @Override
+    public void existsByWalletAddress(String walletAddress) {
+        String sql = "SELECT COUNT(*) FROM users WHERE wallet_address = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, walletAddress);
+        if (count != null && count > 0) {
+            throw new RuntimeException("Wallet already registered");
+        }
+    }
+
+    @Override
+    public Optional<UserModel> findByWalletAddress(String walletAddress) {
+        String sql = "SELECT * FROM users WHERE wallet_address = ?";
+        try {
+            UserModel user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserModel.class), walletAddress);
+            return Optional.of(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public UUID createMinimalUserForWalletSignUp(UserModel user) {
+        String sql = "INSERT INTO users (role, wallet_address, stake_address, public_key, wallet_network, created_at) VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id";
+        Object[] args = new Object[]{
+                user.getWallet_address(),
+                user.getStake_address(),
+                user.getPublic_key(),
+                user.getWallet_network(),
+                user.getRole(),
+                user.getCreated_at()
+        };
+        return jdbcTemplate.queryForObject(sql,args,UUID.class);
+    }
+
+    @Override
+    public void updateWalletInfo(UserModel user) {
+        String sql = "UPDATE users SET wallet_address = ?, stake_address = ?, public_key = ? WHERE user_id = ?";
+        Object[] args = new Object[]{
+                user.getWallet_address(),
+                user.getStake_address(),
+                user.getPublic_key(),
+                user.getUser_id()
+        };
+        int rowsUpdated = jdbcTemplate.update(sql, args);
     }
 }

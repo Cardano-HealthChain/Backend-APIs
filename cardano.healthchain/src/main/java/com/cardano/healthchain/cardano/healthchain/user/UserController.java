@@ -10,9 +10,6 @@ import com.cardano.healthchain.cardano.healthchain.utils.notifications.Notificat
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionResponse;
-import com.cardano.healthchain.cardano.healthchain.utils.web3Wallet.WalletService;
-import com.cardano.healthchain.cardano.healthchain.utils.web3Wallet.dtos.WalletConnectionRequest;
-import com.cardano.healthchain.cardano.healthchain.utils.web3Wallet.dtos.WalletConnectionStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,15 +24,13 @@ import java.util.ArrayList;
 public class UserController {
     private final UserService userService;
     private final PermissionService permissionService;
-    private final WalletService walletService;
     private final MedicalDataService medicalDataService;
     private final NotificationService notificationService;
     private final ClinicService clinicService;
     private final AuditService auditService;
-    public UserController(UserService userService, PermissionService permissionService, WalletService walletService, MedicalDataService medicalDataService, NotificationService notificationService, ClinicService clinicService, AuditService auditService) {
+    public UserController(UserService userService, PermissionService permissionService, MedicalDataService medicalDataService, NotificationService notificationService, ClinicService clinicService, AuditService auditService) {
         this.userService = userService;
         this.permissionService = permissionService;
-        this.walletService = walletService;
         this.medicalDataService = medicalDataService;
         this.notificationService = notificationService;
         this.clinicService = clinicService;
@@ -76,10 +71,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUserProfileWithLocationData(Principal principal,@Valid @RequestBody UserUpdateLocationData userUpdateLocationData){
         userService.updateUserProfileWithLocationData(userUpdateLocationData,principal.getName());
-    }
-    @PostMapping("wallet/connect")
-    public WalletConnectionStatus connectUserWallet(Principal principal, @RequestBody WalletConnectionRequest walletConnectionRequest){
-        return walletService.connectWallet(walletConnectionRequest, principal.getName());
     }
     @GetMapping("/record")
     public MedicalDataResponse getMedicalRecordById(Principal principal,@RequestParam String record_id) {

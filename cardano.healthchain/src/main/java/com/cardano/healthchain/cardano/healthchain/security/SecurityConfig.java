@@ -46,7 +46,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/resident/signup","/auth/login")
+                        .requestMatchers("/api/v1/wallet-auth/link-wallet").authenticated()
+                        .requestMatchers("/api/v1/resident/signup","/auth/login", "/api/v1/wallet-auth")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
