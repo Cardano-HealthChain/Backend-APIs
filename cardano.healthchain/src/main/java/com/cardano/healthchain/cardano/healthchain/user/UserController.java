@@ -78,23 +78,28 @@ public class UserController {
     }
     @GetMapping("/records")
     public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return medicalDataService.getMedicalRecordsForUser(page, principal.getName());
+        return new ArrayList<>();
+//        return medicalDataService.getMedicalRecordsForUser(page, principal.getName());
     }
     @GetMapping("/records/filtered")
     public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
-        return medicalDataService.getMedicalRecordsForUserFiltered(page,principal.getName(), category);
+        return new ArrayList<>();
+//        return medicalDataService.getMedicalRecordsForUserFiltered(page,principal.getName(), category);
     }
     @GetMapping("/verified_records")
     public ArrayList<MedicalDataResponse> getVerifiedMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
+        return new ArrayList<>();
+//        return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
     }
     @GetMapping("/verified_records/filtered")
     public ArrayList<MedicalDataResponse> getVerifiedMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
-        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(), category);
+        return new ArrayList<>();
+//        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(), category);
     }
     @GetMapping("/records/search")
     public ArrayList<MedicalDataResponse> searchForMedicalRecord(Principal principal, @RequestParam String search_keyword, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(),search_keyword);
+        return new ArrayList<>();
+//        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(),search_keyword);
     }
     @GetMapping("permissions")
     public ArrayList<PermissionResponse> getPermittedClinicsForUser(Principal principal, @RequestParam int page){
@@ -117,6 +122,7 @@ public class UserController {
     @GetMapping("notifications")
     public ArrayList<NotificationResponse> getNotificationsForUser(Principal principal, @RequestParam int page){
         return notificationService.getNotificationsForUser(page, principal.getName());
+//        return Collections.emptyList();
     }
     @PostMapping("notifications/read")
     @ResponseStatus(HttpStatus.NO_CONTENT)
