@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepositoryI{
         List<UserModel> users = jdbcTemplate.query(
                 sql,
                 new BeanPropertyRowMapper<>(UserModel.class),
-                user_id
+                UUID.fromString(user_id)
         );
         return users.isEmpty() ? null : users.get(0);
     }
