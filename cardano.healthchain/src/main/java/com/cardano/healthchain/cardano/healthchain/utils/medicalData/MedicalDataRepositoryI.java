@@ -5,13 +5,13 @@ import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.Medica
 import java.util.ArrayList;
 
 public interface MedicalDataRepositoryI {
-    ArrayList<MedicalDataResponse> getMedicalRecordsForUser(int page, String email);
+    ArrayList<MedicalDataResponse> getMedicalRecordsForUser(int page, String user_id);
 
-    ArrayList<MedicalDataResponse> getMedicalRecordsForUserFiltered(int page, String email, String category);
+    ArrayList<MedicalDataResponse> getMedicalRecordsForUserFiltered(int page, String user_id, String category);
 
     MedicalDataResponse getMedicalRecordById(String recordId);
 
     int getVerifiedRecordCountForUser(String user_id);
 
-    void recordPermissionSharedWithClinic(String email, String clinicId);
+    void recordPermissionSharedWithClinic(String user_id, String clinicId);
 }
