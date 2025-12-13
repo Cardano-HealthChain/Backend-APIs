@@ -60,8 +60,8 @@ public class SecurityConfig {
                             res.sendError(401, "Unauthorized");
                         })
                 )
-                .addFilterBefore(new EmailPasswordAuthFilter(authenticationManager,jwtService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtValidityFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtValidityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new EmailPasswordAuthFilter(authenticationManager,jwtService), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
     @Bean
