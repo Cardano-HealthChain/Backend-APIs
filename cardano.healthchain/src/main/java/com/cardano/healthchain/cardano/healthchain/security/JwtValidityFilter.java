@@ -34,7 +34,7 @@ public class JwtValidityFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-
+        logger.info("JWT filter hit: {} ".concat(request.getRequestURI()));
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -43,6 +43,7 @@ public class JwtValidityFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
+        logger.info("JWT found: {} ".concat(token));
 
         // Validate JWT
         if (!jwtService.isTokenValid(token)) {
@@ -50,8 +51,8 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         String user_id = jwtService.extractUserId(token).toString();
+        logger.info("JWT is valid for userId={} ".concat(user_id));
 
         // Avoid overwriting existing authentication
         if (user_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -65,7 +66,7 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             // Convert DB role to Spring Security authority
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase());
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user.getUser_id(),
+                            user.getUser_id().toString(),
                             null,
                             List.of(authority)
                     );

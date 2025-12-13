@@ -47,7 +47,6 @@ public class JwtService {
                 .setSubject(userId)   // Primary identity
                 .claim("role", role)
                 .claim("email", email)
-                .setClaims(extraClaims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
