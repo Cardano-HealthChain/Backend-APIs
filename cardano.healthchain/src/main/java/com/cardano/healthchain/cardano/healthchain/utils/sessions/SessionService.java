@@ -15,7 +15,7 @@ public class SessionService {
     }
     public void createSession(String email, String refreshToken, String ip, String agent) {
 
-        SessionModel session = new SessionModel();
+        SessionDataResponse session = new SessionDataResponse();
         session.setUserEmail(email);
         session.setRefreshToken(refreshToken);
         session.setIpAddress(ip);
@@ -24,7 +24,7 @@ public class SessionService {
         session.setExpiresAt(LocalDateTime.now().plusDays(30)); // 30-day validity
         sessionRepository.save(session);
     }
-    public List<SessionModel> listSessions(String email) {
+    public List<SessionDataResponse> listSessions(String email) {
         return sessionRepository.getSessionsForUser(email);
     }
     public void revokeSession(UUID sessionId) {

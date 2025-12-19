@@ -1,16 +1,14 @@
 package com.cardano.healthchain.cardano.healthchain.clinics;
 
-import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateRequest;
-import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateResponse;
-import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicModel;
+import com.cardano.healthchain.cardano.healthchain.clinics.doctors.DoctorService;
+import com.cardano.healthchain.cardano.healthchain.clinics.dtos.*;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.MedicalDataService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
-import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataUploadRequest;
-import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataUploadResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationService;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
-import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionStatusResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionDataResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,45 +25,50 @@ public class ClinicController {
     private final MedicalDataService medicalDataService;
     private final PermissionService permissionService;
     private final NotificationService notificationService;
-    public ClinicController(ClinicService clinicService, MedicalDataService medicalDataService, PermissionService permissionService, NotificationService notificationService) {
+    private final AuditService auditService;
+    private final DoctorService doctorService;
+    public ClinicController(ClinicService clinicService, MedicalDataService medicalDataService, PermissionService permissionService, NotificationService notificationService, AuditService auditService, DoctorService doctorService) {
         this.clinicService = clinicService;
         this.medicalDataService = medicalDataService;
         this.permissionService = permissionService;
         this.notificationService = notificationService;
+        this.auditService = auditService;
+        this.doctorService = doctorService;
     }
     @PostMapping("signup")
     public ClinicCreateResponse signup(@Valid @RequestBody ClinicCreateRequest clinicCreateRequest){
         return clinicService.signUp(clinicCreateRequest);
     }
-    @GetMapping("profile")
-    public ClinicModel getClinicProfile(Principal principal){
-        return clinicService.getClinicProfile(principal.getName());
+    @PostMapping("signup/admin-details")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateAdminDetails(@Valid @RequestBody ClinicAdminCreateRequest clinicAdminCreateRequest){
+        clinicService.updateAdminDetails(clinicAdminCreateRequest);
+    }
+    @GetMapping("clinic-details")
+    public ClinicDataResponse getClinicInformation(Principal principal){
+        return clinicService.getClinicInformation(principal.getName());
     }
     @PutMapping("region")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateClinicRegion(Principal principal,@RequestParam String new_region){
         clinicService.updateClinicRegion(principal.getName(), new_region);
     }
-    @PostMapping("clinic/permissions/request")
+    @GetMapping("permissions")
+    public ArrayList<PermissionDataResponse> viewRequestedPermissionsByClinicUsingClinicID(Principal principal, int page){
+        return permissionService.getClinicPermissionRequestsById(principal.getName(),page);
+    }
+    @GetMapping("user-records")
+    public ArrayList<MedicalDataResponse> viewUserRecordsById(Principal principal,@RequestParam String userId, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
+        permissionService.checkIfClinicHasReadPermissionForUser(userId,principal.getName());
+        return medicalDataService.getMedicalRecordsForUser(userId,page);
+    }
+    @GetMapping("notifications")
+    public ArrayList<NotificationResponse> getClinicNotifications(Principal principal, @RequestParam int page){
+        return notificationService.getNotificationForEntity(principal.getName(),page);
+    }
+    @GetMapping("create-doctor")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void requestRecordPermissionFromUser(Principal principal,@RequestParam String user_email, @RequestParam String access_type){
-        clinicService.requestRecordPermissionFromUser(principal.getName(),user_email, access_type);
-    }
-    @GetMapping("clinic/permissions")
-    public ArrayList<PermissionStatusResponse> viewPermissionStatus(Principal principal){
-        return clinicService.viewPermissionStatusForClinic(principal.getName());
-    }
-    @PostMapping("clinic/records/upload")
-    public MedicalDataUploadResponse uploadMedicalDataForUser(@Valid @RequestBody MedicalDataUploadRequest medicalDataUploadRequest){
-        return clinicService.uploadMedicalDataForUser(medicalDataUploadRequest);
-    }
-    @GetMapping("clinic/records/user")
-    public ArrayList<MedicalDataResponse> viewAllUserRecords(Principal principal,@RequestParam String user_email, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        permissionService.checkClinicAccessToUserRecordStatus(principal.getName());
-        return medicalDataService.verifyAndGetMedicalRecordsForUser(1,user_email);
-    }
-    @GetMapping("clinic/notifications")
-    public ArrayList<NotificationResponse> getClinicNotifications(Principal principal){
-        return notificationService.getNotificationsForClinic(principal.getName());
+    public void createDoctor(Principal principal, DoctorCreateRequest doctorCreateRequest){
+        doctorService.createDoctor(principal.getName(),doctorCreateRequest);
     }
 }

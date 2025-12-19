@@ -1,13 +1,9 @@
 package com.cardano.healthchain.cardano.healthchain.utils.sessions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class SessionModel {
+public class SessionDataResponse {
     private UUID sessionId;
     private String userEmail;
     private String refreshToken;
@@ -17,7 +13,7 @@ public class SessionModel {
     private LocalDateTime expiresAt;
     private boolean revoked;
 
-    public SessionModel(UUID sessionId, String userEmail, String refreshToken, String ipAddress, String userAgent, LocalDateTime createdAt, LocalDateTime expiresAt, boolean revoked) {
+    public SessionDataResponse(UUID sessionId, String userEmail, String refreshToken, String ipAddress, String userAgent, LocalDateTime createdAt, LocalDateTime expiresAt, boolean revoked) {
         this.sessionId = sessionId;
         this.userEmail = userEmail;
         this.refreshToken = refreshToken;
@@ -27,7 +23,7 @@ public class SessionModel {
         this.expiresAt = expiresAt;
         this.revoked = revoked;
     }
-    public SessionModel() {
+    public SessionDataResponse() {
     }
     public UUID getSessionId() {
         return sessionId;

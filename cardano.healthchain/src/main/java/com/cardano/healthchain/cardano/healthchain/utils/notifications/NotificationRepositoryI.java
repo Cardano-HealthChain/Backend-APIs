@@ -5,7 +5,10 @@ import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.Noti
 import java.util.ArrayList;
 
 public interface NotificationRepositoryI {
-    ArrayList<NotificationResponse> getNotificationsForUser(int page, String user_email);
-    public void insertClinicRequestNotification(String userEmail, String title, String message, String notificationLevel, String notificationType);
+    ArrayList<NotificationResponse> getNotificationsForEntityById(int page, String entity_id);
     void markNotificationAsRead(String notificationId);
+    void insertNotificationForEntity(String entityId, String title, String message, String notificationLevel, String notificationType);
+    void insertNotificationForEntities(ArrayList<String> entityIds, String title, String message, String notificationLevel, String notificationType);
+    void deleteNotification(String notificationId);
+    void deleteNotificationsForEntity(String entityId);
 }

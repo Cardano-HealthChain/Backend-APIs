@@ -1,7 +1,8 @@
 package com.cardano.healthchain.cardano.healthchain.utils.web3walletauth;
 
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
-import com.cardano.healthchain.cardano.healthchain.user.dtos.UserModel;
+import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import com.cardano.healthchain.cardano.healthchain.utils.web3walletauth.dtos.*;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
@@ -49,17 +50,16 @@ public class WalletAuthService {
         // check if wallet already exists and throw exception if exists
         userRepository.existsByWalletAddress(walletSignUpRequest.getWalletAddress());
         // create new minimal user
-        UserModel newUser = new UserModel();
+        UserDataProfileResponse newUser = new UserDataProfileResponse();
         newUser.setWallet_address(walletSignUpRequest.getWalletAddress());
         newUser.setStake_address(walletSignUpRequest.getStakeAddress());
         newUser.setPublic_key(walletSignUpRequest.getPublicKey());
         newUser.setWallet_network("CARDANO");
-        newUser.setRole(walletSignUpRequest.getRole());
         newUser.setCreated_at(LocalDateTime.now());
         UUID minimalUserForWalletSignUpUser_id = userRepository.createMinimalUserForWalletSignUp(newUser);
         // generate JWT
-        String token = jwtService.generateTokenWithUserId(minimalUserForWalletSignUpUser_id.toString(), walletSignUpRequest.getRole(), Map.of());
-        return new WalletAuthResponse(true, token, walletSignUpRequest.getRole(), walletSignUpRequest.getWalletAddress(), "Wallet registered successfully");
+        String token = jwtService.generateTokenWithEntityId(minimalUserForWalletSignUpUser_id.toString(), Healthchain_Roles_Enum.RESIDENT.name(), Map.of());
+        return new WalletAuthResponse(true, token, Healthchain_Roles_Enum.RESIDENT.name().toLowerCase(), walletSignUpRequest.getWalletAddress(), "Wallet registered successfully");
     }
 
     public WalletAuthResponse login(WalletLoginRequest walletLoginRequest) {
@@ -68,10 +68,10 @@ public class WalletAuthService {
         if (!valid) {
             throw new RuntimeException("Invalid wallet signature");
         }
-        UserModel user = userRepository.findByWalletAddress(walletLoginRequest.getWalletAddress())
+        UserDataProfileResponse user = userRepository.findByWalletAddress(walletLoginRequest.getWalletAddress())
                 .orElseThrow(() -> new RuntimeException("Wallet not registered"));
-        String token = jwtService.generateTokenWithUserId(user.getUser_id().toString(), user.getRole(), Map.of());
-        return new WalletAuthResponse(true, token, user.getRole(), user.getWallet_address(), "Login successful");
+        String token = jwtService.generateTokenWithEntityId(user.getUser_id().toString(), Healthchain_Roles_Enum.RESIDENT.name(), Map.of());
+        return new WalletAuthResponse(true, token, Healthchain_Roles_Enum.RESIDENT.name().toLowerCase(), user.getWallet_address(), "Login successful");
     }
 
     public WalletAuthResponse linkWallet(LinkWalletRequest linkWalletRequest, String user_id) {
@@ -82,12 +82,12 @@ public class WalletAuthService {
         }
         //check if wallet already exists and throw exception if it does
         userRepository.existsByWalletAddress(linkWalletRequest.getWalletAddress());
-        UserModel currentUser = userRepository.getUserById(user_id);
+        UserDataProfileResponse currentUser = userRepository.getUserById(user_id);
         currentUser.setWallet_address(linkWalletRequest.getWalletAddress());
         currentUser.setStake_address(linkWalletRequest.getStakeAddress());
         currentUser.setPublic_key(linkWalletRequest.getPublicKey());
         userRepository.updateWalletInfo(currentUser);
-        return new WalletAuthResponse(true, null, currentUser.getRole(), linkWalletRequest.getWalletAddress(), "Wallet linked successfully");
+        return new WalletAuthResponse(true, null, Healthchain_Roles_Enum.RESIDENT.name(), linkWalletRequest.getWalletAddress(), "Wallet linked successfully");
     }
 
     // Placeholder signature verification

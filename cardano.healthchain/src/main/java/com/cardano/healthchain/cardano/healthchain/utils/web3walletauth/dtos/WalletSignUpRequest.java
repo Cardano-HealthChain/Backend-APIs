@@ -6,16 +6,14 @@ public class WalletSignUpRequest {
     private String publicKey;
     private String signature;
     private String message;
-    private String role;
     public WalletSignUpRequest() {
     }
-    public WalletSignUpRequest(String walletAddress, String stakeAddress, String publicKey, String signature, String message, String role) {
+    public WalletSignUpRequest(String walletAddress, String stakeAddress, String publicKey, String signature, String message) {
         this.walletAddress = walletAddress;
         this.stakeAddress = stakeAddress;
         this.publicKey = publicKey;
         this.signature = signature;
         this.message = message;
-        this.role = role;
     }
     public String getWalletAddress() {
         return walletAddress;
@@ -57,14 +55,6 @@ public class WalletSignUpRequest {
         this.message = message;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     @Override
     public String toString() {
         return "WalletSignUpRequest{" +
@@ -73,7 +63,6 @@ public class WalletSignUpRequest {
                 ", publicKey='" + publicKey + '\'' +
                 ", signature='" + signature + '\'' +
                 ", message='" + message + '\'' +
-                ", role='" + role + '\'' +
                 '}';
     }
 }

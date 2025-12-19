@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class UserModel {
+public class UserDataProfileResponse {
     @JsonIgnore
     private UUID user_id;
     private String email;
@@ -29,7 +29,6 @@ public class UserModel {
     private String state_of_origin;
     private LocalDateTime created_at;
     private boolean verified;
-    private String role;
     @JsonIgnore
     private String wallet_address;
     @JsonIgnore
@@ -41,9 +40,9 @@ public class UserModel {
     private String wallet_network;
     @JsonIgnore
     private String last_wallet_login;
-    public UserModel() {
+    public UserDataProfileResponse() {
     }
-    public UserModel(UUID user_id, String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String blood_type, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String role, String wallet_address, String stake_address, String public_key, String wallet_verified_at, String wallet_network, String last_wallet_login) {
+    public UserDataProfileResponse(UUID user_id, String email, String hashed_password, String first_name, String last_name, String phone_number, LocalDate dob, String gender, String address, String blood_type, String genotype, String known_allergies, String pre_existing_conditions, String emergency_contact_name, String emergency_contact_phone, String emergency_contact_rel, String nationality, String state_of_origin, LocalDateTime created_at, boolean verified, String wallet_address, String stake_address, String public_key, String wallet_verified_at, String wallet_network, String last_wallet_login) {
         this.user_id = user_id;
         this.email = email;
         this.hashed_password = hashed_password;
@@ -64,7 +63,6 @@ public class UserModel {
         this.state_of_origin = state_of_origin;
         this.created_at = created_at;
         this.verified = verified;
-        this.role = role;
         this.wallet_address = wallet_address;
         this.stake_address = stake_address;
         this.public_key = public_key;
@@ -192,12 +190,6 @@ public class UserModel {
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
-    public String getRole() {
-        return role;
-    }
-    public void setRole(String role) {
-        this.role = role;
-    }
     public String getWallet_address() {
         return wallet_address;
     }
@@ -257,7 +249,6 @@ public class UserModel {
                 ", state_of_origin='" + state_of_origin + '\'' +
                 ", created_at=" + created_at +
                 ", verified=" + verified +
-                ", role='" + role + '\'' +
                 ", wallet_address='" + wallet_address + '\'' +
                 ", stake_address='" + stake_address + '\'' +
                 ", public_key='" + public_key + '\'' +

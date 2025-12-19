@@ -1,62 +1,67 @@
 package com.cardano.healthchain.cardano.healthchain.clinics;
 
+import com.cardano.healthchain.cardano.healthchain.clinics.doctors.DoctorRepositoryI;
+import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicAdminCreateRequest;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateRequest;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateResponse;
-import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicModel;
-import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainService;
-import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataUploadRequest;
-import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataUploadResponse;
+import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicDataResponse;
+import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
+import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
+import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
+import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainServiceI;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationService;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
-import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionStatusResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class ClinicService {
+    private final JwtService jwtService;
+    private final UserRepositoryI userRepository;
     private final ClinicRepositoryI clinicRepository;
+    private final DoctorRepositoryI doctorRepository;
     private final NotificationService notificationService;
     private final PermissionService permissionService;
-    private final BlockChainService blockChainService;
-    public ClinicService(ClinicRepositoryI clinicRepository, NotificationService notificationService, PermissionService permissionService, BlockChainService blockChainService) {
+    private final BlockChainServiceI cardanoBlockChainServiceImpl;
+    public ClinicService(ClinicRepositoryI clinicRepository, JwtService jwtService, UserRepositoryI userRepository, DoctorRepositoryI doctorRepository, NotificationService notificationService, PermissionService permissionService, BlockChainServiceI cardanoBlockChainServiceImpl) {
         this.clinicRepository = clinicRepository;
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+        this.doctorRepository = doctorRepository;
         this.notificationService = notificationService;
         this.permissionService = permissionService;
-        this.blockChainService = blockChainService;
+        this.cardanoBlockChainServiceImpl = cardanoBlockChainServiceImpl;
     }
     public int getTotalClinicsVisitedByUser(String user_id) {
         return clinicRepository.getTotalClinicsVisitedByUser(user_id);
     }
-
     public ClinicCreateResponse signUp(ClinicCreateRequest clinicCreateRequest) {
-        return null;
-    }
-
-    public ClinicModel getClinicProfile(String name) {
-        return null;
-    }
-
-    public void updateClinicRegion(String name, String newRegion) {
-    }
-    @Transactional
-    public void requestRecordPermissionFromUser(String clinic_email, String user_email, String access_type) {
-        permissionService.clinicRequestUserPermission(clinic_email, user_email,access_type);
-        notificationService.insertClinicRequestNotification(
-                user_email,
-                "",
-                "",
-                "",
-                ""
+        UUID clinicId = clinicRepository.createClinic(clinicCreateRequest);
+        return new ClinicCreateResponse(
+                Healthchain_Roles_Enum.CLINIC.name(),
+                jwtService.generateTokenWithEntityId(
+                        String.valueOf(clinicId),
+                        Healthchain_Roles_Enum.CLINIC.name(),
+                        Map.of()
+                )
         );
     }
-
-    public ArrayList<PermissionStatusResponse> viewPermissionStatusForClinic(String name) {
-        return null;
+    public void updateClinicRegion(String clinicId, String newRegion) {
+        clinicRepository.updateClinicRegion(clinicId,newRegion);
     }
-
-    public MedicalDataUploadResponse uploadMedicalDataForUser(MedicalDataUploadRequest medicalDataUploadRequest) {
-        return null;
+    public void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest) {
+        ClinicDataResponse clinicByEmail = clinicRepository.getClinicByEmail(clinicAdminCreateRequest.getClinic_email());
+        clinicRepository.updateAdminDetails(clinicAdminCreateRequest);
+    }
+    public ClinicDataResponse getClinicInformation(String clinicId) {
+        return clinicRepository.getClinicById(clinicId);
+    }
+    public int getTotalDoctorsUnderClinic(String clinicId){
+        return doctorRepository.getDoctorsCountUnderClinic(clinicId);
+    }
+    public void userAddToClinicsSharedRecordWith(String userId, String clinicId) {
+        userRepository.userAddToClinicsSharedRecordWith(userId, clinicId);
     }
 }

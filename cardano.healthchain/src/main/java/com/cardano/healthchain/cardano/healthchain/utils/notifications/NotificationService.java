@@ -11,18 +11,22 @@ public class NotificationService {
     public NotificationService(NotificationRepositoryImpl notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
-    public ArrayList<NotificationResponse> getNotificationsForUser(int page, String user_id) {
-        return notificationRepository.getNotificationsForUser(page, user_id);
+    public ArrayList<NotificationResponse> getNotificationForEntity(String entityId,int page) {
+        return notificationRepository.getNotificationsForEntityById(page, entityId);
     }
-
     public void markNotificationAsRead(String notificationId) {
         notificationRepository.markNotificationAsRead(notificationId);
     }
-
-    public void insertClinicRequestNotification(String userEmail, String title, String message, String notification_level, String notification_type) {
-        notificationRepository.insertClinicRequestNotification(userEmail,title,message,notification_level,notification_type);
+    public void insertClinicRequestNotification(String user_id, String title, String message, String notification_level, String notification_type) {
+        notificationRepository.insertNotificationForEntity(user_id,title,message,notification_level,notification_type);
     }
-    public ArrayList<NotificationResponse> getNotificationsForClinic(String name) {
-        return null;
+    public void insertDoctorUploadedRecordForUser(String user_id, String title, String message, String notification_level, String notification_type) {
+        notificationRepository.insertNotificationForEntity(user_id,title,message,notification_level,notification_type);
+    }
+    public void insertUserGrantedPermissionForClinic(String clinicId, String title, String message, String notification_level, String notification_type) {
+        notificationRepository.insertNotificationForEntity(clinicId,title,message,notification_level,notification_type);
+    }
+    public void insertUserRevokedPermissionForClinic(String clinicId, String title, String message, String notification_level, String notification_type) {
+        notificationRepository.insertNotificationForEntity(clinicId,title,message,notification_level,notification_type);
     }
 }

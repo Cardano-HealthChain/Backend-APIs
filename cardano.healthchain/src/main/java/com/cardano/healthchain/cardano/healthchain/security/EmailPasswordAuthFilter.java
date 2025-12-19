@@ -48,20 +48,21 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authResult
     ) throws IOException {
-        String user_id = authResult.getName();
+        /* entity ID cause all actors in the application have the same login route but are authenticated with different authentication providers */
+        String entity_id = authResult.getName();
         String role = authResult.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)  // extract the authority string
                 .findFirst()
                 .orElse(null);
-        String token = jwtService.generateTokenWithUserId(
-                user_id,
+        String token = jwtService.generateTokenWithEntityId(
+                entity_id,
                 role,
                 Map.of()
         );
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO(token, authResult.getAuthorities().stream().findFirst().orElse(null).toString().toLowerCase());
         String responseLoginDTO = new ObjectMapper().writeValueAsString(loginResponseDTO);
-        logger.info(String.format("login attempt made for: %s and response was: %s",user_id,responseLoginDTO));
+        logger.info(String.format("login attempt made for: %s and response was: %s",entity_id,responseLoginDTO));
         response.getWriter().write(responseLoginDTO);
     }
 }

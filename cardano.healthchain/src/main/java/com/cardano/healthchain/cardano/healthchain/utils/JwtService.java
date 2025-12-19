@@ -30,10 +30,10 @@ public class JwtService {
     // ===============================
 
     // For wallet-only users (no email)
-    public String generateTokenWithUserId(String userId, String role, Map<String, Object> extraClaims) {
+    public String generateTokenWithEntityId(String entityId, String role, Map<String, Object> extraClaims) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userId)   // Primary identity
+                .setSubject(entityId)   // Primary identity
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
@@ -68,7 +68,6 @@ public class JwtService {
         Claims claims = extractAllClaims(token);
         return claims.get("email", String.class);  // null if wallet login
     }
-
     // Extract role
     public String extractRole(String token) {
         Claims claims = extractAllClaims(token);

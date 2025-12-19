@@ -11,24 +11,19 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 @Service
 public class MedicalRecordHashGeneratorService {
     public String generateHashAndReturn(MedicalDataResponse medicalRecordForUser) throws JsonProcessingException, NoSuchAlgorithmException {
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-
         ObjectNode node = mapper.createObjectNode();
         node.put("record_id", medicalRecordForUser.getRecord_id());
         node.put("record_type", medicalRecordForUser.getRecord_type());
         node.put("record_data", medicalRecordForUser.getRecord_data());
-        node.put("patientName", medicalRecordForUser.getPatientName());
-        node.put("uploaded_by", medicalRecordForUser.getUploaded_by());
+        node.put("uploaded_by", medicalRecordForUser.getClinic_uploaded());
         node.put("created_at", medicalRecordForUser.getCreated_at().toString());
-
         String jsonString = mapper.writeValueAsString(node);        // create a hashing algorithm
         String hashValue = this.sha256(jsonString);
         medicalRecordForUser.setHash_local(hashValue);

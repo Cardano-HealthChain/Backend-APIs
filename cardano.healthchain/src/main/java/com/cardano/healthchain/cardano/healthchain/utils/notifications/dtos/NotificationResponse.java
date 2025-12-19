@@ -1,39 +1,43 @@
 package com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos;
 
-import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationSeverityLevel;
-import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationTypes;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class NotificationResponse {
-    private String notification_id;
+    private UUID notification_id;
+    private UUID entity_id;
     private String title;
     private String message;
-    private NotificationSeverityLevel notification_level;
-    private NotificationTypes notification_type;
-    private LocalDateTime sent_at;
-
-    public NotificationResponse(String notification_id, String title, String message, NotificationSeverityLevel notification_level, NotificationTypes notification_type, LocalDateTime sent_at) {
-        this.notification_id = notification_id;
-        this.title = title;
-        this.message = message;
-        this.notification_level = notification_level;
-        this.notification_type = notification_type;
-        this.sent_at = sent_at;
-    }
+    private String notification_level;
+    private String notification_type;
+    private boolean read_status;
 
     public NotificationResponse() {
     }
 
-    public String getNotification_id() {
+    public NotificationResponse(UUID notification_id, UUID entity_id, String title, String message, String notification_level, String notification_type, boolean read_status) {
+        this.notification_id = notification_id;
+        this.entity_id = entity_id;
+        this.title = title;
+        this.message = message;
+        this.notification_level = notification_level;
+        this.notification_type = notification_type;
+        this.read_status = read_status;
+    }
+
+    public UUID getNotification_id() {
         return notification_id;
     }
 
-    public void setNotification_id(String notification_id) {
+    public void setNotification_id(UUID notification_id) {
         this.notification_id = notification_id;
+    }
+
+    public UUID getEntity_id() {
+        return entity_id;
+    }
+
+    public void setEntity_id(UUID entity_id) {
+        this.entity_id = entity_id;
     }
 
     public String getTitle() {
@@ -52,27 +56,39 @@ public class NotificationResponse {
         this.message = message;
     }
 
-    public NotificationSeverityLevel getNotification_level() {
+    public String getNotification_level() {
         return notification_level;
     }
 
-    public void setNotification_level(NotificationSeverityLevel notification_level) {
+    public void setNotification_level(String notification_level) {
         this.notification_level = notification_level;
     }
 
-    public NotificationTypes getNotification_type() {
+    public String getNotification_type() {
         return notification_type;
     }
 
-    public void setNotification_type(NotificationTypes notification_type) {
+    public void setNotification_type(String notification_type) {
         this.notification_type = notification_type;
     }
 
-    public LocalDateTime getSent_at() {
-        return sent_at;
+    public boolean isRead_status() {
+        return read_status;
     }
 
-    public void setSent_at(LocalDateTime sent_at) {
-        this.sent_at = sent_at;
+    public void setRead_status(boolean read_status) {
+        this.read_status = read_status;
+    }
+    @Override
+    public String toString() {
+        return "NotificationResponse{" +
+                "notification_id=" + notification_id +
+                ", entity_id=" + entity_id +
+                ", title='" + title + '\'' +
+                ", message='" + message + '\'' +
+                ", notification_level='" + notification_level + '\'' +
+                ", notification_type='" + notification_type + '\'' +
+                ", read_status=" + read_status +
+                '}';
     }
 }

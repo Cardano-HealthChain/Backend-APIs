@@ -1,6 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.utils.audit;
 
-import com.cardano.healthchain.cardano.healthchain.utils.audit.dtos.AuditModel;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.dtos.AuditDataResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.enums.ActorTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ public class AuditService {
     public AuditService(AuditRepositoryI auditRepository) {
         this.auditRepository = auditRepository;
     }
-    public void logAuditEvent(ACTOR_TYPE actorType, String actorReference, String action_performed, String details){
+    public void logAuditEvent(ActorTypeEnum actorType, String actorReference, String action_performed, String details){
         auditRepository.logEvent(actorType,actorReference,action_performed,details);
     }
-    public ArrayList<AuditModel> getAuditsByActorReference(int page, String actorReference){
+    public ArrayList<AuditDataResponse> getAuditsByActorReference(String actorReference, int page){
         return auditRepository.getAuditsByActorReference(page,actorReference);
     }
 }

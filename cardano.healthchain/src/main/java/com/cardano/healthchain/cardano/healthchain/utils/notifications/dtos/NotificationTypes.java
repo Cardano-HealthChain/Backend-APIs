@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.utils.notifications;
+package com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos;
 
 public enum NotificationTypes {
     criticalAlerts,

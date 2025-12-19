@@ -1,37 +1,37 @@
 package com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-@Builder
 public class MedicalDataResponse {
+    private UUID user_id;
     private String record_id;
     private String record_type;
     private String record_data;
-    private String patientName;
+    @JsonIgnore
     private String hash_local;
+    @JsonIgnore
     private String blockchainTransactionID;
     private boolean verified = true;
-    private String uploaded_by; // reflects clinic name in DB
+    private String doctor_uploaded; // reflects clinic name in DB
+    private String clinic_uploaded; // reflects clinic name in DB
     private LocalDate created_at;
 
-    public MedicalDataResponse(String record_id, String record_type, String record_data, String patientName, String hash_local, String blockchainTransactionID, boolean verified, String uploaded_by, LocalDate created_at) {
+    public MedicalDataResponse() {
+    }
+
+    public MedicalDataResponse(String record_id, String record_type, String record_data, String hash_local, String blockchainTransactionID, boolean verified, String doctor_uploaded, String clinic_uploaded, LocalDate created_at) {
         this.record_id = record_id;
         this.record_type = record_type;
         this.record_data = record_data;
-        this.patientName = patientName;
         this.hash_local = hash_local;
         this.blockchainTransactionID = blockchainTransactionID;
         this.verified = verified;
-        this.uploaded_by = uploaded_by;
+        this.doctor_uploaded = doctor_uploaded;
+        this.clinic_uploaded = clinic_uploaded;
         this.created_at = created_at;
-    }
-
-    public MedicalDataResponse() {
     }
 
     public String getRecord_id() {
@@ -58,14 +58,6 @@ public class MedicalDataResponse {
         this.record_data = record_data;
     }
 
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
     public String getHash_local() {
         return hash_local;
     }
@@ -90,12 +82,12 @@ public class MedicalDataResponse {
         this.verified = verified;
     }
 
-    public String getUploaded_by() {
-        return uploaded_by;
+    public String getClinic_uploaded() {
+        return clinic_uploaded;
     }
 
-    public void setUploaded_by(String uploaded_by) {
-        this.uploaded_by = uploaded_by;
+    public void setClinic_uploaded(String clinic_uploaded) {
+        this.clinic_uploaded = clinic_uploaded;
     }
 
     public LocalDate getCreated_at() {
@@ -104,5 +96,13 @@ public class MedicalDataResponse {
 
     public void setCreated_at(LocalDate created_at) {
         this.created_at = created_at;
+    }
+
+    public String getDoctor_uploaded() {
+        return doctor_uploaded;
+    }
+
+    public void setDoctor_uploaded(String doctor_uploaded) {
+        this.doctor_uploaded = doctor_uploaded;
     }
 }

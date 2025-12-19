@@ -1,7 +1,8 @@
 package com.cardano.healthchain.cardano.healthchain.configs;
 
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
-import com.cardano.healthchain.cardano.healthchain.user.dtos.UserModel;
+import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +20,11 @@ public class ResidentUserDetailsService implements UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserModel user = userRepository.getUserByEmail(username);
+        UserDataProfileResponse user = userRepository.getUserByEmail(username);
         return new User(
                 user.getUser_id().toString(),
                 user.getHashed_password(),
-                List.of(new SimpleGrantedAuthority(user.getRole()))
+                List.of(new SimpleGrantedAuthority(Healthchain_Roles_Enum.RESIDENT.name()))
         );
     }
 }

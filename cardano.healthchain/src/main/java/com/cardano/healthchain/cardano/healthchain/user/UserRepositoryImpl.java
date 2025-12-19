@@ -1,7 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
-import com.cardano.healthchain.cardano.healthchain.utils.HEALTHCHAIN_ROLES;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,22 +17,22 @@ public class UserRepositoryImpl implements UserRepositoryI{
         this.jdbcTemplate = jdbcTemplate;
     }
     @Override
-    public UserModel getUserByEmail(String email) {
+    public UserDataProfileResponse getUserByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        List<UserModel> users = jdbcTemplate.query(
+        List<UserDataProfileResponse> users = jdbcTemplate.query(
                 sql,
-                new BeanPropertyRowMapper<>(UserModel.class),
+                new BeanPropertyRowMapper<>(UserDataProfileResponse.class),
                 email
         );
         return users.isEmpty() ? null : users.get(0);
     }
 
     @Override
-    public UserModel getUserById(String user_id) {
+    public UserDataProfileResponse getUserById(String user_id) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
-        List<UserModel> users = jdbcTemplate.query(
+        List<UserDataProfileResponse> users = jdbcTemplate.query(
                 sql,
-                new BeanPropertyRowMapper<>(UserModel.class),
+                new BeanPropertyRowMapper<>(UserDataProfileResponse.class),
                 UUID.fromString(user_id)
         );
         return users.isEmpty() ? null : users.get(0);
@@ -41,8 +40,8 @@ public class UserRepositoryImpl implements UserRepositoryI{
 
     @Override
     public UUID createUser(UserCreateRequest userCreateRequest) {
-        String sql = "INSERT INTO users (email, hashed_password, first_name, last_name, role) VALUES (?, ?, ?, ?, ?) RETURNING user_id";
-        Object[] args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname(), HEALTHCHAIN_ROLES.RESIDENT.name()};
+        String sql = "INSERT INTO users (email, hashed_password, first_name, last_name) VALUES (?, ?, ?, ?) RETURNING user_id";
+        Object[] args = new Object[]{userCreateRequest.getEmail(), userCreateRequest.getPassword(), userCreateRequest.getFirstname(), userCreateRequest.getLastname()};
         return jdbcTemplate.queryForObject(
                 sql,
                 args,
@@ -50,44 +49,44 @@ public class UserRepositoryImpl implements UserRepositoryI{
         );
     }
     @Override
-    public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_id) {
+    public void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetailsRequest userUpdateProfilePersonalDetailsRequest, String user_id) {
         String SQL_USER_UPDATE_PERSONAL = "UPDATE users SET gender = ?, dob = ? WHERE user_id = ?";
         Object[] args = new Object[]{
-                userUpdateProfilePersonalDetails.getGender(),
-                userUpdateProfilePersonalDetails.getDob(),
+                userUpdateProfilePersonalDetailsRequest.getGender(),
+                userUpdateProfilePersonalDetailsRequest.getDob(),
                 UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_PERSONAL, args);
     }
     @Override
-    public void updateUserProfileHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String user_id) {
+    public void updateUserProfileHealthInformation(UserUpdateProfileHealthInformationRequest userUpdateProfileHealthInformationRequest, String user_id) {
         String SQL_USER_UPDATE_HEALTH = "UPDATE users SET blood_type = ?,genotype = ?,known_allergies = ?,pre_existing_conditions = ? WHERE user_id = ?";
         Object[] args = new Object[]{
-                userUpdateProfileHealthInformation.getBlood_type(),
-                userUpdateProfileHealthInformation.getGenotype(),
-                userUpdateProfileHealthInformation.getKnown_allergies(),
-                userUpdateProfileHealthInformation.getPre_existing_conditions(),
+                userUpdateProfileHealthInformationRequest.getBlood_type(),
+                userUpdateProfileHealthInformationRequest.getGenotype(),
+                userUpdateProfileHealthInformationRequest.getKnown_allergies(),
+                userUpdateProfileHealthInformationRequest.getPre_existing_conditions(),
                 UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_HEALTH, args);
     }
     @Override
-    public void updateUserProfileEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String user_id) {
+    public void updateUserProfileEmergencyContact(UserUpdateEmergencyInformationRequest userUpdateEmergencyInformationRequest, String user_id) {
         String SQL_USER_UPDATE_EMERGENCY = "UPDATE users SET emergency_contact_name = ?,emergency_contact_phone = ?,emergency_contact_rel = ? WHERE user_id = ?";
         Object[] args = new Object[]{
-                userUpdateEmergencyInformation.getName(),
-                userUpdateEmergencyInformation.getRelationship(),
-                userUpdateEmergencyInformation.getPhone_number(),
+                userUpdateEmergencyInformationRequest.getName(),
+                userUpdateEmergencyInformationRequest.getRelationship(),
+                userUpdateEmergencyInformationRequest.getPhone_number(),
                 UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_EMERGENCY, args);
     }
     @Override
-    public void updateUserProfileLocationData(UserUpdateLocationData userUpdateLocationData, String user_id) {
+    public void updateUserProfileLocationData(UserUpdateLocationDataRequest userUpdateLocationDataRequest, String user_id) {
         String SQL_USER_UPDATE_LOCATION = "UPDATE users SET nationality = ?, state_of_origin = ? WHERE user_id = ?";
         Object[] args = new Object[]{
-                userUpdateLocationData.getCountry(),
-                userUpdateLocationData.getState(),
+                userUpdateLocationDataRequest.getCountry(),
+                userUpdateLocationDataRequest.getState(),
                 UUID.fromString(user_id)
         };
         jdbcTemplate.update(SQL_USER_UPDATE_LOCATION, args);
@@ -119,10 +118,10 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
 
     @Override
-    public Optional<UserModel> findByWalletAddress(String walletAddress) {
+    public Optional<UserDataProfileResponse> findByWalletAddress(String walletAddress) {
         String sql = "SELECT * FROM users WHERE wallet_address = ?";
         try {
-            UserModel user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserModel.class), walletAddress);
+            UserDataProfileResponse user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserDataProfileResponse.class), walletAddress);
             return Optional.of(user);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -130,21 +129,20 @@ public class UserRepositoryImpl implements UserRepositoryI{
     }
 
     @Override
-    public UUID createMinimalUserForWalletSignUp(UserModel user) {
-        String sql = "INSERT INTO users (role, wallet_address, stake_address, public_key, wallet_network, created_at) VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id";
+    public UUID createMinimalUserForWalletSignUp(UserDataProfileResponse user) {
+        String sql = "INSERT INTO users (wallet_address, stake_address, public_key, wallet_network, created_at) VALUES (?, ?, ?, ?, ?) RETURNING user_id";
         Object[] args = new Object[]{
                 user.getWallet_address(),
                 user.getStake_address(),
                 user.getPublic_key(),
                 user.getWallet_network(),
-                user.getRole(),
                 user.getCreated_at()
         };
         return jdbcTemplate.queryForObject(sql,args,UUID.class);
     }
 
     @Override
-    public void updateWalletInfo(UserModel user) {
+    public void updateWalletInfo(UserDataProfileResponse user) {
         String sql = "UPDATE users SET wallet_address = ?, stake_address = ?, public_key = ? WHERE user_id = ?";
         Object[] args = new Object[]{
                 user.getWallet_address(),
@@ -153,5 +151,11 @@ public class UserRepositoryImpl implements UserRepositoryI{
                 user.getUser_id()
         };
         int rowsUpdated = jdbcTemplate.update(sql, args);
+    }
+
+    @Override
+    public void userAddToClinicsSharedRecordWith(String userId, String clinicId) {
+        String sql = "INSERT INTO medical_records_shared_with (user_id,client_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, UUID.fromString(userId),UUID.fromString(clinicId));
     }
 }

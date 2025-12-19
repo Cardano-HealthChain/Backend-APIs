@@ -1,9 +1,9 @@
 package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
-import com.cardano.healthchain.cardano.healthchain.utils.HEALTHCHAIN_ROLES;
+import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
-import com.cardano.healthchain.cardano.healthchain.utils.audit.ACTOR_TYPE;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.enums.ActorTypeEnum;
 import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
 import com.cardano.healthchain.cardano.healthchain.utils.otp.OtpServiceEmailImpl;
 import org.slf4j.Logger;
@@ -45,9 +45,9 @@ public class UserService {
 //        return String.format("OTP was sent to: %s for verification",userCreateRequest.getEmail());
         return new UserCreateResponse(
                 userCreateRequest.getEmail(),
-                jwtService.generateTokenWithUserId(
+                jwtService.generateTokenWithEntityId(
                         user_id.toString(),
-                        HEALTHCHAIN_ROLES.RESIDENT.name().toLowerCase(),
+                        Healthchain_Roles_Enum.RESIDENT.name().toLowerCase(),
                         Map.of()
                 )
         );
@@ -55,53 +55,52 @@ public class UserService {
     public UserCreateResponse validateUserOtp(String otpcode, String email) {
         otpServiceEmailImpl.checkOTPValidity(otpcode, email);
         userRepository.verifyUserAccount(email);
-        UserModel userByEmail = userRepository.getUserByEmail(email);
+        UserDataProfileResponse userByEmail = userRepository.getUserByEmail(email);
         logger.info(String.format("OTP validation was successful".concat(String.valueOf(LocalDateTime.now()))));
         return new UserCreateResponse(
                 email,
-                jwtService.generateTokenWithUserId(
+                jwtService.generateTokenWithEntityId(
                         userByEmail.getUser_id().toString(),
-                        HEALTHCHAIN_ROLES.RESIDENT.toString().toLowerCase(),
+                        Healthchain_Roles_Enum.RESIDENT.toString().toLowerCase(),
                         Map.of()
                 )
         );
     }
     @Transactional
-    public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_id) {
-        userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetails, user_id);
-        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_id,"Profile Update","Update Profile with Personal details");
+    public void updateUserProfileWithPersonalDetails(UserUpdateProfilePersonalDetailsRequest userUpdateProfilePersonalDetailsRequest, String user_id) {
+        userRepository.updateUserProfilePersonalDetails(userUpdateProfilePersonalDetailsRequest, user_id);
+        auditService.logAuditEvent(ActorTypeEnum.RESIDENT,user_id,"Profile Update","Update Profile with Personal details");
         logger.info("Personal data profile completion stage is successful");
-        logger.info(userUpdateProfilePersonalDetails.getFirstname().concat(" ").concat(userUpdateProfilePersonalDetails.getLastname()));
+        logger.info(userUpdateProfilePersonalDetailsRequest.getFirstname().concat(" ").concat(userUpdateProfilePersonalDetailsRequest.getLastname()));
     }
     @Transactional
-    public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String user_id) {
-        userRepository.updateUserProfileHealthInformation(userUpdateProfileHealthInformation, user_id);
-        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_id,"Profile Update","Update Profile with health information");
+    public void updateUserProfileWithHealthInformation(UserUpdateProfileHealthInformationRequest userUpdateProfileHealthInformationRequest, String user_id) {
+        userRepository.updateUserProfileHealthInformation(userUpdateProfileHealthInformationRequest, user_id);
+        auditService.logAuditEvent(ActorTypeEnum.RESIDENT,user_id,"Profile Update","Update Profile with health information");
         logger.info("Health information data profile completion stage is successful");
     }
     @Transactional
-    public void updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String user_id) {
-        userRepository.updateUserProfileEmergencyContact(userUpdateEmergencyInformation, user_id);
-        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_id,"Profile Update","Update Profile with emergency information");
+    public void updateUserProfileWithEmergencyContact(UserUpdateEmergencyInformationRequest userUpdateEmergencyInformationRequest, String user_id) {
+        userRepository.updateUserProfileEmergencyContact(userUpdateEmergencyInformationRequest, user_id);
+        auditService.logAuditEvent(ActorTypeEnum.RESIDENT,user_id,"Profile Update","Update Profile with emergency information");
         logger.info("Emergency information profile completion stage is successful");
     }
     @Transactional
-    public void updateUserProfileWithLocationData(UserUpdateLocationData userUpdateLocationData, String user_id) {
-        userRepository.updateUserProfileLocationData(userUpdateLocationData,user_id);
-        auditService.logAuditEvent(ACTOR_TYPE.RESIDENT,user_id,"Profile Update","Update Profile with location data");
+    public void updateUserProfileWithLocationData(UserUpdateLocationDataRequest userUpdateLocationDataRequest, String user_id) {
+        userRepository.updateUserProfileLocationData(userUpdateLocationDataRequest,user_id);
+        auditService.logAuditEvent(ActorTypeEnum.RESIDENT,user_id,"Profile Update","Update Profile with location data");
         logger.info("Location data profile completion stage is successful");
     }
     private boolean checkIfUserHasPendingAccount(String user_id) {
-        UserModel userById = userRepository.getUserById(user_id);
+        UserDataProfileResponse userById = userRepository.getUserById(user_id);
         if(userById == null) return false;
         return userById.isVerified();
     }
     public int getProfileCompletionLevel(String user_id) {
-        UserModel user = userRepository.getUserById(user_id);
+        UserDataProfileResponse user = userRepository.getUserById(user_id);
         if (user == null) return 0;
 
         int filled = 0;
-
 // Signup Captured Details
         if (user.getFirst_name() != null && !user.getFirst_name().isEmpty()) filled++;
         if (user.getLast_name() != null && !user.getLast_name().isEmpty()) filled++;
@@ -135,10 +134,10 @@ public class UserService {
         userRepository.deleteUserById(user_id);
     }
 
-    public UserModel getUserByEmail(String user_email) {
+    public UserDataProfileResponse getUserByEmail(String user_email) {
         return userRepository.getUserByEmail(user_email);
     }
-    public UserModel getUserById(String user_id) {
+    public UserDataProfileResponse getUserById(String user_id) {
         return userRepository.getUserById(user_id);
     }
 }

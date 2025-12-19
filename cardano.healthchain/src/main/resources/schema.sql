@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS users (
     state_of_origin             VARCHAR(100),
     created_at                  TIMESTAMP DEFAULT NOW(),
     verified                    BOOLEAN DEFAULT FALSE,
-    role                        TEXT,
 -- wallet information
     wallet_address              TEXT UNIQUE,
     stake_address               TEXT UNIQUE,
@@ -29,6 +28,40 @@ CREATE TABLE IF NOT EXISTS users (
     wallet_network              VARCHAR(20),
     last_wallet_login           TIMESTAMP
 );
+-- Clinics Table
+
+CREATE TABLE IF NOT EXISTS clinics (
+    clinic_id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clinic_name                     VARCHAR(255) NOT NULL,
+    clinic_facility_type            VARCHAR(255) NOT NULL,
+    clinic_registration_number      VARCHAR(255) UNIQUE NOT NULL,
+    clinic_email                    VARCHAR(255) UNIQUE NOT NULL,
+    clinic_phone_number             VARCHAR(255) NOT NULL,
+    clinic_address                  VARCHAR(255) NOT NULL,
+    clinic_region                   VARCHAR(255) NOT NULL,
+    clinic_lga                      VARCHAR(255) NOT NULL,
+    created_at                      TIMESTAMP DEFAULT NOW(),
+    verified BOOLEAN                DEFAULT TRUE,
+    --clinic admin information
+    clinic_admin_name               VARCHAR(255) NOT NULL,
+    clinic_admin_email              VARCHAR(255) NOT NULL,
+    clinic_admin_phone_number       VARCHAR(255) NOT NULL,
+    clinic_admin_password           VARCHAR(255) NOT NULL
+);
+-- Doctors Table
+CREATE TABLE IF NOT EXISTS doctors (
+    doctor_id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clinic_id                   UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
+    doctor_email                VARCHAR(255) UNIQUE,
+    password                    TEXT,
+    first_name                  VARCHAR(255),
+    last_name                   VARCHAR(255),
+    phone_number                VARCHAR(50),
+    dob                         DATE,
+    gender                      VARCHAR(20),
+    address                     TEXT
+);
+
 CREATE TABLE IF NOT EXISTS wallet_login_challenges (
     wallet_address   VARCHAR(255) NOT NULL,
     challenge        TEXT NOT NULL,
@@ -58,27 +91,17 @@ CREATE TABLE IF NOT EXISTS otp_codes (
     used BOOLEAN DEFAULT FALSE
 );
 
--- Clinics Table
-CREATE TABLE IF NOT EXISTS clinics (
-    clinic_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    clinic_name VARCHAR(255) NOT NULL,
-    region VARCHAR(255) NOT NULL,
-    address TEXT,
-    clinic_email VARCHAR(255) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
-    verified BOOLEAN DEFAULT FALSE,
-    license_no TEXT
-);
 -- Permissions Table
 CREATE TABLE IF NOT EXISTS permissions (
     permissions_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id             UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     clinic_id UUID      NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
-    clinic_email        VARCHAR(50) NOT NULL,
+    doctor_id UUID      NOT NULL REFERENCES doctors(doctor_id) ON DELETE CASCADE,
+    clinic_name         VARCHAR(50) NOT NULL,
+    doctor_name         VARCHAR(50) NOT NULL,
     access_type         VARCHAR(50) NOT NULL,
     granted_at          TIMESTAMP,
     expires_at          TIMESTAMP,
-    status              TEXT,
     granted             BOOLEAN DEFAULT FALSE,
     revoked             BOOLEAN DEFAULT FALSE,
     revoked_at          TIMESTAMP
@@ -88,6 +111,7 @@ CREATE TABLE IF NOT EXISTS permissions (
 CREATE TABLE IF NOT EXISTS medical_records (
     record_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id             UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    clinic_id           UUID NOT NULL REFERENCES clinics(clinic_id) ON DELETE CASCADE,
     record_type         VARCHAR(100),
     record_data         TEXT NOT NULL,
     clinic_name         VARCHAR(100),
@@ -97,6 +121,8 @@ CREATE TABLE IF NOT EXISTS medical_records (
     block_number        TEXT,
     verified            BOOLEAN,
     diagnosis           TEXT,
+    doctor_uploaded     TEXT,
+    clinic_uploaded     TEXT,
     created_at          TIMESTAMP DEFAULT NOW()
 );
 
@@ -110,8 +136,7 @@ CREATE TABLE IF NOT EXISTS medical_records_shared_with (
 -- Notifications Table
 CREATE TABLE IF NOT EXISTS notifications (
     notification_id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id                 UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-    clinic_email            VARCHAR(255) NOT NULL REFERENCES clinics(clinic_email) ON DELETE CASCADE,
+    entity_id               UUID NOT NULL,
     title                   VARCHAR(255) NOT NULL,
     message                 TEXT NOT NULL,
     notification_level      VARCHAR(100),

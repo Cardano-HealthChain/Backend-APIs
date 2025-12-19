@@ -1,12 +1,14 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
+import com.cardano.healthchain.cardano.healthchain.configs.ClinicUserDetailsService;
+import com.cardano.healthchain.cardano.healthchain.configs.DoctorUserDetailsService;
 import com.cardano.healthchain.cardano.healthchain.configs.ResidentUserDetailsService;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,18 +29,25 @@ public class SecurityConfig {
         this.jwtValidityFilter = jwtValidityFilter;
         this.jwtService = jwtService;
     }
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public AuthenticationManager createAuthenticationManager(HttpSecurity httpSecurity, ResidentUserDetailsService residentUserDetailsService, PasswordEncoder passwordEncoder) throws Exception {
-        AuthenticationManagerBuilder authManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(residentUserDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        authManagerBuilder.authenticationProvider(daoAuthenticationProvider);
-        return authManagerBuilder.build();
+    public AuthenticationManager createAuthenticationManager(
+            HttpSecurity httpSecurity,
+            ResidentUserDetailsService residentUserDetailsService,
+            ClinicUserDetailsService clinicUserDetailsService,
+            DoctorUserDetailsService doctorUserDetailsService,
+            PasswordEncoder passwordEncoder
+    ) throws Exception {
+        DaoAuthenticationProvider residentDaoAuthenticationProvider = new DaoAuthenticationProvider(residentUserDetailsService);
+        residentDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        DaoAuthenticationProvider clinicDaoAuthenticationProvider = new DaoAuthenticationProvider(clinicUserDetailsService);
+        clinicDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        DaoAuthenticationProvider doctorDaoAuthenticationProvider = new DaoAuthenticationProvider(doctorUserDetailsService);
+        doctorDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(List.of(residentDaoAuthenticationProvider,clinicDaoAuthenticationProvider,doctorDaoAuthenticationProvider));
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
@@ -47,7 +56,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/wallet-auth/link-wallet").authenticated()
-                        .requestMatchers("/api/v1/resident/signup","/auth/login", "/api/v1/wallet-auth/**")
+                        .requestMatchers(
+                                "/api/v1/resident/signup",
+                                "/api/v1/clinic/create-doctor",
+                                "/api/v1/clinic/signup",
+                                "/auth/login",
+                                "/api/v1/wallet-auth/**"
+                        )
                         .permitAll()
                         .anyRequest()
                         .authenticated()

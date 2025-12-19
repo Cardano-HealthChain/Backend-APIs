@@ -15,7 +15,7 @@ public class SessionRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(SessionModel session) {
+    public void save(SessionDataResponse session) {
         String sql = """
             INSERT INTO user_sessions
             (user_email, refresh_token, ip_address, user_agent, expires_at)
@@ -32,14 +32,14 @@ public class SessionRepository {
         );
     }
 
-    public List<SessionModel> getSessionsForUser(String email) {
+    public List<SessionDataResponse> getSessionsForUser(String email) {
         String sql = "SELECT * FROM user_sessions WHERE user_email = ? AND revoked = FALSE";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(SessionModel.class), email);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(SessionDataResponse.class), email);
     }
 
-    public SessionModel getByRefreshToken(String token) {
+    public SessionDataResponse getByRefreshToken(String token) {
         String sql = "SELECT * FROM user_sessions WHERE refresh_token = ? AND revoked = FALSE";
-        List<SessionModel> result = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(SessionModel.class), token);
+        List<SessionDataResponse> result = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(SessionDataResponse.class), token);
 
         return result.isEmpty() ? null : result.get(0);
     }

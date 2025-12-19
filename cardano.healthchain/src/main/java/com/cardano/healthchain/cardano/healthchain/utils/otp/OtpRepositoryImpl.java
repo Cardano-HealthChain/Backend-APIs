@@ -1,13 +1,11 @@
 package com.cardano.healthchain.cardano.healthchain.utils.otp;
 
-import com.cardano.healthchain.cardano.healthchain.utils.otp.dtos.OtpResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.otp.dtos.OtpDataResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Repository
 public class OtpRepositoryImpl implements OtpRepositoryI{
@@ -16,12 +14,12 @@ public class OtpRepositoryImpl implements OtpRepositoryI{
         this.jdbcTemplate = jdbcTemplate;
     }
     @Override
-    public OtpResponse getOtpByCodeAndEmail(String otpcode, String email) {
+    public OtpDataResponse getOtpByCodeAndEmail(String otpcode, String email) {
         String otpGetByCodeAndEmailSqlStatement = "SELECT * FROM otp_codes WHERE otp_code = ? AND email = ?";
         Object[] args = new Object[]{otpcode,email};
         return jdbcTemplate.queryForObject(
                 otpGetByCodeAndEmailSqlStatement,
-                new BeanPropertyRowMapper<>(OtpResponse.class),
+                new BeanPropertyRowMapper<>(OtpDataResponse.class),
                 args
         );
     }

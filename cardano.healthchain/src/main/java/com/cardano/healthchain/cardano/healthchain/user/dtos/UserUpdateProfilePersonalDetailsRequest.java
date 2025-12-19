@@ -2,20 +2,20 @@ package com.cardano.healthchain.cardano.healthchain.user.dtos;
 
 import java.time.LocalDate;
 
-public class UserUpdateProfilePersonalDetails {
+public class UserUpdateProfilePersonalDetailsRequest {
    private String firstname;
    private String lastname;
    private LocalDate dob;
    private String gender;
 
-    public UserUpdateProfilePersonalDetails(String firstname, String lastname, LocalDate dob, String gender) {
+    public UserUpdateProfilePersonalDetailsRequest(String firstname, String lastname, LocalDate dob, String gender) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.dob = dob;
         this.gender = gender;
     }
 
-    public UserUpdateProfilePersonalDetails() {
+    public UserUpdateProfilePersonalDetailsRequest() {
     }
 
     public String getFirstname() {

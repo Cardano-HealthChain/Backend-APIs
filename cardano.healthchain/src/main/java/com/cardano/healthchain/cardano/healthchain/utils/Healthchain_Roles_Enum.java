@@ -1,7 +1,8 @@
 package com.cardano.healthchain.cardano.healthchain.utils;
 
-public enum HEALTHCHAIN_ROLES {
+public enum Healthchain_Roles_Enum {
     RESIDENT,
     CLINIC,
+    DOCTOR,
     AUTHORITY
 }

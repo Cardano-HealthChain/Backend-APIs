@@ -1,7 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryImpl;
-import com.cardano.healthchain.cardano.healthchain.user.dtos.UserModel;
+import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,7 +44,6 @@ public class JwtValidityFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         logger.info("JWT found: {} ".concat(token));
-
         // Validate JWT
         if (!jwtService.isTokenValid(token)) {
             logger.warn("Invalid or expired JWT: " + token);
@@ -53,18 +52,18 @@ public class JwtValidityFilter extends OncePerRequestFilter {
         }
         String user_id = jwtService.extractUserId(token).toString();
         logger.info("JWT is valid for userId={} ".concat(user_id));
-
         // Avoid overwriting existing authentication
         if (user_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
             // Fetch user from DB
-            UserModel user = userRepository.getUserById(user_id);
+            UserDataProfileResponse user = userRepository.getUserById(user_id);
             if (user == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
             // Convert DB role to Spring Security authority
-            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase());
+            GrantedAuthority authority = new SimpleGrantedAuthority(
+                    "ROLE_".concat(jwtService.extractRole(token)).toUpperCase()
+            );
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             user.getUser_id().toString(),
                             null,

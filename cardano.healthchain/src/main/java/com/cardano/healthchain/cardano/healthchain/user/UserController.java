@@ -3,16 +3,20 @@ package com.cardano.healthchain.cardano.healthchain.user;
 import com.cardano.healthchain.cardano.healthchain.clinics.ClinicService;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
-import com.cardano.healthchain.cardano.healthchain.utils.audit.dtos.AuditModel;
+import com.cardano.healthchain.cardano.healthchain.utils.audit.dtos.AuditDataResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.MedicalDataService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationService;
+import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationMessages;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationSeverityLevel;
+import com.cardano.healthchain.cardano.healthchain.utils.notifications.dtos.NotificationTypes;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
-import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionResponse;
+import com.cardano.healthchain.cardano.healthchain.utils.permissions.dtos.PermissionDataResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +45,7 @@ public class UserController {
         return userService.createUserWithEmail(userCreateRequest);
     }
     @GetMapping("profile_data")
-    public UserModel getUSerById(Principal principal){
+    public UserDataProfileResponse getUSerById(Principal principal){
         return userService.getUserById(principal.getName());
     }
     @GetMapping("profile_completion")
@@ -54,75 +58,76 @@ public class UserController {
     }
     @PostMapping("profile/personal_details")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUserProfileWithPersonalDetails(Principal principal,@Valid @RequestBody UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails){
-        userService.updateUserProfileWithPersonalDetails(userUpdateProfilePersonalDetails,principal.getName());
+    public void updateUserProfileWithPersonalDetails(Principal principal,@Valid @RequestBody UserUpdateProfilePersonalDetailsRequest userUpdateProfilePersonalDetailsRequest){
+        userService.updateUserProfileWithPersonalDetails(userUpdateProfilePersonalDetailsRequest,principal.getName());
     }
     @PostMapping("profile/basic_health_information")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUserProfileWithHealthInformation(Principal principal,@Valid @RequestBody UserUpdateProfileHealthInformation userUpdateProfileHealthInformation){
-        userService.updateUserProfileWithHealthInformation(userUpdateProfileHealthInformation,principal.getName());
+    public void updateUserProfileWithHealthInformation(Principal principal,@Valid @RequestBody UserUpdateProfileHealthInformationRequest userUpdateProfileHealthInformationRequest){
+        userService.updateUserProfileWithHealthInformation(userUpdateProfileHealthInformationRequest,principal.getName());
     }
     @PostMapping("profile/emergency_contact")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUserProfileWithEmergencyContact(Principal principal,@Valid @RequestBody UserUpdateEmergencyInformation userUpdateEmergencyInformation){
-        userService.updateUserProfileWithEmergencyContact(userUpdateEmergencyInformation,principal.getName());
+    public void updateUserProfileWithEmergencyContact(Principal principal,@Valid @RequestBody UserUpdateEmergencyInformationRequest userUpdateEmergencyInformationRequest){
+        userService.updateUserProfileWithEmergencyContact(userUpdateEmergencyInformationRequest,principal.getName());
     }
     @PostMapping("profile/location")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUserProfileWithLocationData(Principal principal,@Valid @RequestBody UserUpdateLocationData userUpdateLocationData){
-        userService.updateUserProfileWithLocationData(userUpdateLocationData,principal.getName());
+    public void updateUserProfileWithLocationData(Principal principal,@Valid @RequestBody UserUpdateLocationDataRequest userUpdateLocationDataRequest){
+        userService.updateUserProfileWithLocationData(userUpdateLocationDataRequest,principal.getName());
     }
     @GetMapping("/record")
-    public MedicalDataResponse getMedicalRecordById(Principal principal,@RequestParam String record_id) {
-        return medicalDataService.getMedicalRecordById(record_id, principal.getName());
+    public MedicalDataResponse getMedicalRecordById(@RequestParam String record_id) {
+        return medicalDataService.getMedicalRecordById(record_id);
     }
     @GetMapping("/records")
     public ArrayList<MedicalDataResponse> getMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return new ArrayList<>();
-//        return medicalDataService.getMedicalRecordsForUser(page, principal.getName());
+        return medicalDataService.getMedicalRecordsForUser(principal.getName(),page);
     }
     @GetMapping("/records/filtered")
     public ArrayList<MedicalDataResponse> getMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
-        return new ArrayList<>();
-//        return medicalDataService.getMedicalRecordsForUserFiltered(page,principal.getName(), category);
+        return medicalDataService.getMedicalRecordsForUserFiltered(principal.getName(), category, page);
     }
     @GetMapping("/verified_records")
     public ArrayList<MedicalDataResponse> getVerifiedMedicalRecordsPerPageForUser(Principal principal, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return new ArrayList<>();
-//        return medicalDataService.verifyAndGetMedicalRecordsForUser(page, principal.getName());
+        return medicalDataService.getVerifiedMedicalRecordsForUser(principal.getName(),page);
     }
     @GetMapping("/verified_records/filtered")
     public ArrayList<MedicalDataResponse> getVerifiedMedicalRecordPerPageForUserFiltered(Principal principal, @RequestParam int page, @RequestParam String category) throws NoSuchAlgorithmException, JsonProcessingException {
-        return new ArrayList<>();
-//        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(), category);
+        return medicalDataService.getVerifiedMedicalRecordsForUserFiltered(principal.getName(),category,page);
     }
     @GetMapping("/records/search")
     public ArrayList<MedicalDataResponse> searchForMedicalRecord(Principal principal, @RequestParam String search_keyword, @RequestParam int page) throws NoSuchAlgorithmException, JsonProcessingException {
-        return new ArrayList<>();
-//        return medicalDataService.verifyAndGetMedicalRecordsForUserFiltered(page,principal.getName(),search_keyword);
+        return medicalDataService.getMedicalRecordsForUserFiltered(principal.getName(), search_keyword, page);
     }
     @GetMapping("permissions")
-    public ArrayList<PermissionResponse> getPermittedClinicsForUser(Principal principal, @RequestParam int page){
-        return permissionService.getPermittedClinicsForUser(principal.getName(),page);
+    public ArrayList<PermissionDataResponse> getPermittedClinicsForUser(Principal principal, @RequestParam int page){
+        return permissionService.getPermittedClinicsForUserById(principal.getName(),page);
     }
     @GetMapping("permission-requests")
-    public ArrayList<PermissionResponse> getClinicPermissionRequests(Principal principal, @RequestParam int page){
-        return permissionService.getClinicPermissionRequestsForUser(principal.getName(),page);
+    public ArrayList<PermissionDataResponse> getClinicPermissionRequests(Principal principal, @RequestParam int page){
+        return permissionService.getRequestedPermissionsForUserById(principal.getName(),page);
     }
+    //@Transactional should be in service layer, quick fix later
     @PostMapping("permissions/grant")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void grantPermission(Principal principal, @RequestParam String clinicId, @RequestParam String permissionAccess){
-        permissionService.permitClinic(clinicId, principal.getName(), permissionAccess);
+        notificationService.insertUserGrantedPermissionForClinic(clinicId,"PERMISSION_GRANTED", NotificationMessages.USER_GRANTED_PERMISSION_TO_CLINIC.getMessage(), NotificationSeverityLevel.high.name(), NotificationTypes.healthUpdates.name());
+        permissionService.userPermitClinic(clinicId, principal.getName());
+        clinicService.userAddToClinicsSharedRecordWith(principal.getName(),clinicId);
     }
+    //@Transactional should be in service layer, quick fix later
     @PostMapping("permissions/revoke")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void revokePermissionForUser(Principal principal, @RequestParam String clinicId){
-        permissionService.revokeClinicPermissionForUser(clinicId,principal.getName());
+        notificationService.insertUserGrantedPermissionForClinic(clinicId,"PERMISSION_REVOKED", NotificationMessages.USER_REVOKED_PERMISSION_TO_CLINIC.getMessage(), NotificationSeverityLevel.high.name(), NotificationTypes.healthUpdates.name());
+        permissionService.userRevokeClinic(clinicId,principal.getName());
     }
     @GetMapping("notifications")
     public ArrayList<NotificationResponse> getNotificationsForUser(Principal principal, @RequestParam int page){
-        return notificationService.getNotificationsForUser(page, principal.getName());
-//        return Collections.emptyList();
+        return notificationService.getNotificationForEntity(principal.getName(),page);
     }
     @PostMapping("notifications/read")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -138,8 +143,8 @@ public class UserController {
         return clinicService.getTotalClinicsVisitedByUser(principal.getName());
     }
     @GetMapping("audit")
-    public ArrayList<AuditModel> getAuditLogInformation(Principal principal,@RequestParam int page){
-        return auditService.getAuditsByActorReference(page,principal.getName());
+    public ArrayList<AuditDataResponse> getAuditLogInformation(Principal principal, @RequestParam int page){
+        return auditService.getAuditsByActorReference(principal.getName(),page);
     }
     @PostMapping("delete")
     public void deleteAccount(Principal principal){

@@ -2,10 +2,9 @@ package com.cardano.healthchain.cardano.healthchain.user.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
-import lombok.Data;
 
 @Builder
-public class UserUpdateEmergencyInformation {
+public class UserUpdateEmergencyInformationRequest {
     @NotBlank(message = "name is required")
     private String name;
     @NotBlank(message = "phone number is required")

@@ -1,26 +1,24 @@
 package com.cardano.healthchain.cardano.healthchain.utils.otp.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Builder
-public class OtpResponse {
+public class OtpDataResponse {
     private String otpId;
     private String email;
     private String otpCode;
     private boolean used;
     private LocalDateTime expiresAt;
-    public OtpResponse(String otpId, String email, String otpCode, boolean used, LocalDateTime expiresAt) {
+    public OtpDataResponse(String otpId, String email, String otpCode, boolean used, LocalDateTime expiresAt) {
         this.otpId = otpId;
         this.email = email;
         this.otpCode = otpCode;
         this.used = used;
         this.expiresAt = expiresAt;
     }
-    public OtpResponse() {
+    public OtpDataResponse() {
     }
     public String getOtpId() {
         return otpId;

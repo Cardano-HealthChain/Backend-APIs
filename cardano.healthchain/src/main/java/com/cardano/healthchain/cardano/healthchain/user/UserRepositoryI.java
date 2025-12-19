@@ -7,17 +7,18 @@ import java.util.UUID;
 
 public interface UserRepositoryI {
     UUID createUser(UserCreateRequest userCreateRequest);
-    UserModel getUserByEmail(String user_email);
-    UserModel getUserById(String user_id);
-    void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetails userUpdateProfilePersonalDetails, String user_id);
-    void updateUserProfileHealthInformation(UserUpdateProfileHealthInformation userUpdateProfileHealthInformation, String user_id);
-    void updateUserProfileEmergencyContact(UserUpdateEmergencyInformation userUpdateEmergencyInformation, String user_id);
-    void updateUserProfileLocationData(UserUpdateLocationData userUpdateLocationData, String user_id);
+    UserDataProfileResponse getUserByEmail(String user_email);
+    UserDataProfileResponse getUserById(String user_id);
+    void updateUserProfilePersonalDetails(UserUpdateProfilePersonalDetailsRequest userUpdateProfilePersonalDetailsRequest, String user_id);
+    void updateUserProfileHealthInformation(UserUpdateProfileHealthInformationRequest userUpdateProfileHealthInformationRequest, String user_id);
+    void updateUserProfileEmergencyContact(UserUpdateEmergencyInformationRequest userUpdateEmergencyInformationRequest, String user_id);
+    void updateUserProfileLocationData(UserUpdateLocationDataRequest userUpdateLocationDataRequest, String user_id);
     void verifyUserAccount(String email);
     void deleteUserByEmail(String email);
     void deleteUserById(String user_id);
     void existsByWalletAddress(String walletAddress);
-    Optional<UserModel> findByWalletAddress(String walletAddress);
-    UUID createMinimalUserForWalletSignUp(UserModel user);
-    void updateWalletInfo(UserModel user);
+    Optional<UserDataProfileResponse> findByWalletAddress(String walletAddress);
+    UUID createMinimalUserForWalletSignUp(UserDataProfileResponse user);
+    void updateWalletInfo(UserDataProfileResponse user);
+    void userAddToClinicsSharedRecordWith(String userId, String clinicId);
 }
