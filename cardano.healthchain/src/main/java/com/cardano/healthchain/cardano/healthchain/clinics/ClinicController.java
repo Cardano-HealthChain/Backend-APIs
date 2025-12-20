@@ -66,9 +66,9 @@ public class ClinicController {
     public ArrayList<NotificationResponse> getClinicNotifications(Principal principal, @RequestParam int page){
         return notificationService.getNotificationForEntity(principal.getName(),page);
     }
-    @GetMapping("create-doctor")
+    @PostMapping("create-doctor")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createDoctor(Principal principal, DoctorCreateRequest doctorCreateRequest){
+    public void createDoctor(Principal principal, @RequestBody DoctorCreateRequest doctorCreateRequest){
         doctorService.createDoctor(principal.getName(),doctorCreateRequest);
     }
 }
