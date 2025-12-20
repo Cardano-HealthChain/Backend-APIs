@@ -1,17 +1,17 @@
-services:
-  postgres:
-    image: postgres:latest
-    container_name: healthchain-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: healthchain
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "healthchain@team"
-    ports:
-      - "3000:5432"
-    networks:
-      - healthchain_network
-
-networks:
-  healthchain_network:
-    driver: bridge
+#services:
+#  postgres:
+#    image: postgres:latest
+#    container_name: healthchain-postgres
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_DB: healthchain
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: "healthchain@team"
+#    ports:
+#      - "3000:5432"
+#    networks:
+#      - healthchain_network
+#
+#networks:
+#  healthchain_network:
+#    driver: bridge
