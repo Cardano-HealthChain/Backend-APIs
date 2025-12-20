@@ -3,6 +3,7 @@ package com.cardano.healthchain.cardano.healthchain.configs;
 import com.cardano.healthchain.cardano.healthchain.clinics.ClinicRepositoryI;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicDataResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +22,16 @@ public class ClinicUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //implement later using a clinic repository to load clinics and ensure information is correct
-        ClinicDataResponse clinicData = clinicRepository.getClinicByAdminEmail(username);
-        return new User(
-                clinicData.getClinic_id().toString(),
-                clinicData.getClinic_admin_password(),
-                List.of(new SimpleGrantedAuthority(Healthchain_Roles_Enum.CLINIC.toString()))
-        );
+
+        try{
+            ClinicDataResponse clinicData = clinicRepository.getClinicByAdminEmail(username);
+            return new User(
+                    clinicData.getClinic_id().toString(),
+                    clinicData.getClinic_admin_password(),
+                    List.of(new SimpleGrantedAuthority(Healthchain_Roles_Enum.CLINIC.name()))
+            );
+        }catch(EmptyResultDataAccessException ex){
+            throw new UsernameNotFoundException("No clinic with that email doesn't work");
+        }
     }
 }

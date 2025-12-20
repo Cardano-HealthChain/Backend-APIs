@@ -21,6 +21,9 @@ public class ResidentUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDataProfileResponse user = userRepository.getUserByEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Resident not found: " + username);
+        }
         return new User(
                 user.getUser_id().toString(),
                 user.getHashed_password(),
