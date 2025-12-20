@@ -25,6 +25,7 @@ public class CustomControllerAdvice {
 //    // Wrong column, bad data types, invalid SQL syntax
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleDataIntegrity(DataIntegrityViolationException ex) {
+        System.out.println(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse("INVALID_DATA","Your request contains invalid or incomplete fields."));
     }
