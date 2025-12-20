@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Repository
@@ -58,4 +59,18 @@ public class DoctorRepositoryImpl implements DoctorRepositoryI{
                 Integer.class,
                 UUID.fromString(clinicId)
         );    }
+
+    @Override
+    public ArrayList<DoctorDataResponse> getDoctorsUnderClinic(String clinicId, int page) {
+        int pageSize = 10;
+        int offset = page * pageSize;
+        String sql = "SELECT * FROM doctors WHERE clinic_id = ? ORDER BY first_name, last_name LIMIT ? OFFSET ?";
+        return (ArrayList<DoctorDataResponse>) jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(DoctorDataResponse.class),
+                UUID.fromString(clinicId),
+                pageSize,
+                offset
+        );
+    }
 }

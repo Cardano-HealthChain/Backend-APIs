@@ -3,7 +3,6 @@ package com.cardano.healthchain.cardano.healthchain.clinics.doctors;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataUploadRequest;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,13 +36,12 @@ public class DoctorController {
     public void doctorUploadRecordForUser(Principal principal, @RequestParam String userId, MedicalDataUploadRequest medicalDataUploadRequest){
         doctorService.doctorUploadRecordForUser(principal.getName(),userId,medicalDataUploadRequest);
     }
-    @Transactional
+    @PostMapping("view-user-records")
     public ArrayList<MedicalDataResponse> doctorViewRecordsForUser(Principal principal, @RequestParam String userId, @RequestParam int page){
         return doctorService.doctorViewRecordsForUser(principal.getName(),userId, page);
     }
-    @Transactional
+    @PostMapping("view-user-recordsfiltered")
     public ArrayList<MedicalDataResponse> doctorViewRecordsForUserFiltered(Principal principal, @RequestParam String userId, @RequestParam String filterTerm, @RequestParam int page){
         return doctorService.doctorViewRecordsForUserFiltered(principal.getName(),userId,filterTerm,page);
     }
-
 }

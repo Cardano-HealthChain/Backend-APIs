@@ -1,6 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.clinics;
 
 import com.cardano.healthchain.cardano.healthchain.clinics.doctors.DoctorService;
+import com.cardano.healthchain.cardano.healthchain.clinics.doctors.dtos.DoctorDataResponse;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.*;
 import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.MedicalDataService;
@@ -47,6 +48,14 @@ public class ClinicController {
     @GetMapping("clinic-details")
     public ClinicDataResponse getClinicInformation(Principal principal){
         return clinicService.getClinicInformation(principal.getName());
+    }
+    @GetMapping("doctors")
+    public ArrayList<DoctorDataResponse> getDoctorsUnderClinic(Principal principal, @RequestParam int page){
+        return clinicService.getDoctorsUnderClinic(principal.getName(),page);
+    }
+    @GetMapping("doctors-count")
+    public int getDoctorsUnderClinicCount(Principal principal, @RequestParam int page){
+        return clinicService.getTotalDoctorsUnderClinic(principal.getName());
     }
     @PutMapping("region")
     @ResponseStatus(HttpStatus.NO_CONTENT)

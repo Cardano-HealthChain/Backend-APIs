@@ -1,6 +1,7 @@
 package com.cardano.healthchain.cardano.healthchain.clinics;
 
 import com.cardano.healthchain.cardano.healthchain.clinics.doctors.DoctorRepositoryI;
+import com.cardano.healthchain.cardano.healthchain.clinics.doctors.dtos.DoctorDataResponse;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicAdminCreateRequest;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateRequest;
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateResponse;
@@ -14,6 +15,7 @@ import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionS
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -66,5 +68,9 @@ public class ClinicService {
     }
     public void userAddToClinicsSharedRecordWith(String userId, String clinicId) {
         userRepository.userAddToClinicsSharedRecordWith(userId, clinicId);
+    }
+
+    public ArrayList<DoctorDataResponse> getDoctorsUnderClinic(String clinicId, int page) {
+        return doctorRepository.getDoctorsUnderClinic(clinicId,page);
     }
 }
