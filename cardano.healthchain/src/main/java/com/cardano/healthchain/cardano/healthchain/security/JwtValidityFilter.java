@@ -1,7 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryImpl;
-import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,12 +26,9 @@ public class JwtValidityFilter extends OncePerRequestFilter {
         this.userRepository = userRepository;
     }
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         logger.info("JWT filter hit: {} ".concat(request.getRequestURI()));
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = extractAuthorizationHeader(request);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -45,22 +41,21 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String user_id = jwtService.extractUserId(token).toString();
-        logger.info("JWT is valid for userId= ".concat(user_id));
+        String entityId = jwtService.extractUserId(token).toString();
+        logger.info("JWT is valid for userId= ".concat(entityId));
         // Avoid overwriting existing authentication
-        if (user_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
             // Fetch user from DB
-            UserDataProfileResponse user = userRepository.getUserById(user_id);
-            if (user == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-            // Convert DB role to Spring Security authority
+//           Object user = entityRepository.getById() will be a good addition later to ensure user exists but also user will fail silently if doesn't exist;
+//            if (user == null) {
+//                filterChain.doFilter(request, response);
+//                return;
+//            }
             GrantedAuthority authority = new SimpleGrantedAuthority(
                     "ROLE_".concat(jwtService.extractRole(token)).toUpperCase()
             );
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user.getUser_id().toString(),
+                            entityId,
                             null,
                             List.of(authority)
                     );
@@ -71,5 +66,9 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
         filterChain.doFilter(request, response);
+    }
+    private static String extractAuthorizationHeader(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        return authHeader;
     }
 }
