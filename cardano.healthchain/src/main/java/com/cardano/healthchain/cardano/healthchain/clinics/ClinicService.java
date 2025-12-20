@@ -11,6 +11,7 @@ import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainServiceI;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationService;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,15 +20,17 @@ import java.util.UUID;
 @Service
 public class ClinicService {
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepositoryI userRepository;
     private final ClinicRepositoryI clinicRepository;
     private final DoctorRepositoryI doctorRepository;
     private final NotificationService notificationService;
     private final PermissionService permissionService;
     private final BlockChainServiceI cardanoBlockChainServiceImpl;
-    public ClinicService(ClinicRepositoryI clinicRepository, JwtService jwtService, UserRepositoryI userRepository, DoctorRepositoryI doctorRepository, NotificationService notificationService, PermissionService permissionService, BlockChainServiceI cardanoBlockChainServiceImpl) {
+    public ClinicService(ClinicRepositoryI clinicRepository, JwtService jwtService, PasswordEncoder passwordEncoder, UserRepositoryI userRepository, DoctorRepositoryI doctorRepository, NotificationService notificationService, PermissionService permissionService, BlockChainServiceI cardanoBlockChainServiceImpl) {
         this.clinicRepository = clinicRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.notificationService = notificationService;
@@ -53,6 +56,7 @@ public class ClinicService {
     }
     public void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest) {
         ClinicDataResponse clinicByEmail = clinicRepository.getClinicByEmail(clinicAdminCreateRequest.getClinic_email());
+        clinicAdminCreateRequest.setPassword(passwordEncoder.encode(clinicAdminCreateRequest.getPassword()));
         clinicRepository.updateAdminDetails(clinicAdminCreateRequest);
     }
     public ClinicDataResponse getClinicInformation(String clinicId) {
