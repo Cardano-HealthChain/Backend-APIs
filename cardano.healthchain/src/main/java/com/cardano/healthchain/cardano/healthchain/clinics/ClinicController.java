@@ -36,7 +36,7 @@ public class ClinicController {
         this.doctorService = doctorService;
     }
     @PostMapping("signup")
-    public ClinicCreateResponse signup(@Valid @RequestBody ClinicCreateRequest clinicCreateRequest){
+    public ClinicCreateResponse signup(@RequestBody ClinicCreateRequest clinicCreateRequest){
         return clinicService.signUp(clinicCreateRequest);
     }
     @PostMapping("signup/admin-details")

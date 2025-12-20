@@ -20,15 +20,12 @@ import java.util.List;
 
 @Component
 public class JwtValidityFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
     private final UserRepositoryImpl userRepository;
-
     public JwtValidityFilter(JwtService jwtService, UserRepositoryImpl userRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -36,12 +33,10 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         logger.info("JWT filter hit: {} ".concat(request.getRequestURI()));
         String authHeader = request.getHeader("Authorization");
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = authHeader.substring(7);
         logger.info("JWT found: {} ".concat(token));
         // Validate JWT
@@ -51,7 +46,7 @@ public class JwtValidityFilter extends OncePerRequestFilter {
             return;
         }
         String user_id = jwtService.extractUserId(token).toString();
-        logger.info("JWT is valid for userId={} ".concat(user_id));
+        logger.info("JWT is valid for userId= ".concat(user_id));
         // Avoid overwriting existing authentication
         if (user_id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // Fetch user from DB
