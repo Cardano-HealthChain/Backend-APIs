@@ -1,9 +1,5 @@
 package com.cardano.healthchain.cardano.healthchain.clinics.dtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
 public class ClinicCreateRequest {
     private String clinic_name;
     private String facility_type;
