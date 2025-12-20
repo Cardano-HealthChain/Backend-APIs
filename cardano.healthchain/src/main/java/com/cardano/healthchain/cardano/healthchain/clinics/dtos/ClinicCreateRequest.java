@@ -1,14 +1,30 @@
 package com.cardano.healthchain.cardano.healthchain.clinics.dtos;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class ClinicCreateRequest {
+    @NotBlank(message = "Clinic Name is Required")
     private String clinic_name;
+    @NotBlank(message = "Clinic facility type is Required")
     private String facility_type;
+    @NotBlank(message = "Registration number is Required")
     private String registration_number;
+    @NotBlank(message = "Email is Required")
+    @Email(message = "Please provide a valid email")
+    @Size(max = 100)
     private String clinic_email;
+    @NotBlank(message = "Clinic Phone Number is Required")
     private String clinic_phone_number;
+    @NotBlank(message = "Password is Required")
+    @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
     private String clinic_password;
+    @NotBlank(message = "Clinic Address is Required")
     private String clinic_address;
+    @NotBlank(message = "Clinic Region is Required")
     private String region;
+    @NotBlank(message = "Clinic LGA is Required")
     private String lga;
     public ClinicCreateRequest() {
     }

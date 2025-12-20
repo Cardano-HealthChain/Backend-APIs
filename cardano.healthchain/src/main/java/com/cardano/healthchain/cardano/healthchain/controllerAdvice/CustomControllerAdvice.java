@@ -19,13 +19,14 @@ public class CustomControllerAdvice {
     private final Logger logger = LoggerFactory.getLogger(CustomControllerAdvice.class);
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<?> handleDuplicateKey(DuplicateKeyException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse("DUPLICATE_RESOURCE","A record with that value already exists."));
     }
 //    // Wrong column, bad data types, invalid SQL syntax
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleDataIntegrity(DataIntegrityViolationException ex) {
-        System.out.println(ex.getMessage());
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse("INVALID_DATA","Your request contains invalid or incomplete fields."));
     }
@@ -39,12 +40,14 @@ public class CustomControllerAdvice {
 //    // Query returning nothing where expected
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<?> handleEmptyResult(EmptyResultDataAccessException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse("NOT_FOUND","The resource you requested does not exist."));
     }
 //    // Catch-all for JdbcTemplate runtime SQL failures
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<?> handleGenericSql(DataAccessException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("DATABASE_ERROR","A database error occurred. Please try again later."));
     }
@@ -59,17 +62,20 @@ public class CustomControllerAdvice {
     }
     @ExceptionHandler(OtpException.class)
     public ResponseEntity<ErrorResponse> handleOtpException(OtpException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("OTP_ERROR","Invalid or expired OTP."));
     }
 
     @ExceptionHandler(PendingUserException.class)
     public ResponseEntity<ErrorResponse> handlePendingUserException(PendingUserException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse("PENDING_USER","Your account is pending verification. Please complete the process."));
     }
     @ExceptionHandler(RecordTamperedException.class)
     public ResponseEntity<ErrorResponse> handleRecordTamperedException(RecordTamperedException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse("RECORD_TAMPERED","The data submitted is invalid or has been tampered with."));
     }

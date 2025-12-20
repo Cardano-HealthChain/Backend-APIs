@@ -43,10 +43,10 @@ CREATE TABLE IF NOT EXISTS clinics (
     created_at                      TIMESTAMP DEFAULT NOW(),
     verified BOOLEAN                DEFAULT TRUE,
     --clinic admin information
-    clinic_admin_name               VARCHAR(255) NOT NULL,
-    clinic_admin_email              VARCHAR(255) NOT NULL,
-    clinic_admin_phone_number       VARCHAR(255) NOT NULL,
-    clinic_admin_password           VARCHAR(255) NOT NULL
+    clinic_admin_name               VARCHAR(255),
+    clinic_admin_email              VARCHAR(255),
+    clinic_admin_phone_number       VARCHAR(255),
+    clinic_admin_password           VARCHAR(255)
 );
 -- Doctors Table
 CREATE TABLE IF NOT EXISTS doctors (
