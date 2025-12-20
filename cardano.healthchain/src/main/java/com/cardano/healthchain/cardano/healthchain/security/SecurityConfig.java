@@ -57,11 +57,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/wallet-auth/link-wallet").authenticated()
                         .requestMatchers(
-                                "/api/v1/resident/signup",
-                                "/api/v1/clinic/create-doctor",
-                                "/api/v1/clinic/signup",
-                                "/auth/login",
-                                "/api/v1/wallet-auth/**"
+                        "/api/v1/resident/signup",
+                        "/api/v1/clinic/signup",
+                        "/auth/login",
+                        "/api/v1/wallet-auth/**"
                         )
                         .permitAll()
                         .anyRequest()
