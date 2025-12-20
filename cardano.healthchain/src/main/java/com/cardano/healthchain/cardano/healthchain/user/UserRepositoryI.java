@@ -2,6 +2,7 @@ package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,4 +22,6 @@ public interface UserRepositoryI {
     UUID createMinimalUserForWalletSignUp(UserDataProfileResponse user);
     void updateWalletInfo(UserDataProfileResponse user);
     void userAddToClinicsSharedRecordWith(String userId, String clinicId);
+
+    ArrayList<UserDataProfileResponse> getUsersSimilarToSearchTerm(String searchTerm, int page);
 }

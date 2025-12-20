@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -158,4 +159,20 @@ public class UserRepositoryImpl implements UserRepositoryI{
         String sql = "INSERT INTO medical_records_shared_with (user_id,client_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, UUID.fromString(userId),UUID.fromString(clinicId));
     }
+
+    @Override
+    public ArrayList<UserDataProfileResponse> getUsersSimilarToSearchTerm(String searchTerm, int page) {
+        page = Math.max(page,1);
+        int offset = (page - 1) * 10;
+        String sql = "SELECT * FROM users WHERE first_name ILIKE ? OR last_name ILIKE ? ORDER BY created_at DESC LIMIT 10 OFFSET ?";
+        String likeTerm = "%" + searchTerm + "%";
+        return new ArrayList<>(
+                jdbcTemplate.query(
+                        sql,
+                        new BeanPropertyRowMapper<>(UserDataProfileResponse.class),
+                        likeTerm,
+                        likeTerm,
+                        offset
+                )
+        );    }
 }

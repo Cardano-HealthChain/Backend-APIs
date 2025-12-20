@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -139,5 +140,9 @@ public class UserService {
     }
     public UserDataProfileResponse getUserById(String user_id) {
         return userRepository.getUserById(user_id);
+    }
+
+    public ArrayList<UserDataProfileResponse> getUsersSimilarToSearchTerm(String searchTerm, int page) {
+        return userRepository.getUsersSimilarToSearchTerm(searchTerm,page);
     }
 }
