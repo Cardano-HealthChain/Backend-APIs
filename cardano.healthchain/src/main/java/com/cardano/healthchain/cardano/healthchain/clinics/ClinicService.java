@@ -54,10 +54,9 @@ public class ClinicService {
     public void updateClinicRegion(String clinicId, String newRegion) {
         clinicRepository.updateClinicRegion(clinicId,newRegion);
     }
-    public void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest) {
-        ClinicDataResponse clinicByEmail = clinicRepository.getClinicByEmail(clinicAdminCreateRequest.getClinic_email());
+    public void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest, String clinicId) {
         clinicAdminCreateRequest.setPassword(passwordEncoder.encode(clinicAdminCreateRequest.getPassword()));
-        clinicRepository.updateAdminDetails(clinicAdminCreateRequest);
+        clinicRepository.updateAdminDetails(clinicAdminCreateRequest, clinicId);
     }
     public ClinicDataResponse getClinicInformation(String clinicId) {
         return clinicRepository.getClinicById(clinicId);

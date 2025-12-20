@@ -45,15 +45,15 @@ public class ClinicRepositoryImpl implements ClinicRepositoryI{
         jdbcTemplate.update(sql, newRegion, UUID.fromString(clinicId));
     }
     @Override
-    public void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest) {
-        String sql = "UPDATE clinics SET clinic_admin_name = ?, clinic_admin_email = ?, clinic_admin_phone_number = ?, clinic_admin_password = ? WHERE clinic_email = ?";
+    public void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest, String clinicId) {
+        String sql = "UPDATE clinics SET clinic_admin_name = ?, clinic_admin_email = ?, clinic_admin_phone_number = ?, clinic_admin_password = ? WHERE clinic_id = ?";
         jdbcTemplate.update(
                 sql,
                 clinicAdminCreateRequest.getAdmin_name(),
                 clinicAdminCreateRequest.getAdmin_email_address(),
                 clinicAdminCreateRequest.getPhone_number(),
                 clinicAdminCreateRequest.getPassword(),
-                clinicAdminCreateRequest.getClinic_email()
+                UUID.fromString(clinicId)
         );
     }
     @Override
@@ -63,7 +63,7 @@ public class ClinicRepositoryImpl implements ClinicRepositoryI{
     }
     @Override
     public ClinicDataResponse getClinicByEmail(String clinic_admin_email) {
-        String sql = "SELECT * FROM clinics WHERE clinic_admin_email = ? LIMIT 1";
+        String sql = "SELECT * FROM clinics WHERE clinic_email = ? LIMIT 1";
         Object[] args = new Object[]{clinic_admin_email};
         return jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(ClinicDataResponse.class),args);
     }

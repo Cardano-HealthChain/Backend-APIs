@@ -10,7 +10,7 @@ public interface ClinicRepositoryI {
     int getTotalClinicsVisitedByUser(String user_id);
     UUID createClinic(ClinicCreateRequest clinicCreateRequest);
     void updateClinicRegion(String clinicId, String newRegion);
-    void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest);
+    void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest, String clinicId);
     ClinicDataResponse getClinicById(String clinic_id);
     ClinicDataResponse getClinicByEmail(String clinic_email);
 }

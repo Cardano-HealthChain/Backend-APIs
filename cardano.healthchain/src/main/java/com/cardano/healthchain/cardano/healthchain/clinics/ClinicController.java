@@ -41,8 +41,8 @@ public class ClinicController {
     }
     @PostMapping("signup/admin-details")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateAdminDetails(@Valid @RequestBody ClinicAdminCreateRequest clinicAdminCreateRequest){
-        clinicService.updateAdminDetails(clinicAdminCreateRequest);
+    public void updateAdminDetails(@Valid @RequestBody ClinicAdminCreateRequest clinicAdminCreateRequest, Principal principal){
+        clinicService.updateAdminDetails(clinicAdminCreateRequest, principal.getName());
     }
     @GetMapping("clinic-details")
     public ClinicDataResponse getClinicInformation(Principal principal){
