@@ -9,13 +9,8 @@ services:
       POSTGRES_PASSWORD: "healthchain@team"
     ports:
       - "3000:5432"
-    volumes:
-      - healthchain_data:/var/lib/postgresql/data
     networks:
       - healthchain_network
-
-volumes:
-  healthchain_data:
 
 networks:
   healthchain_network:
