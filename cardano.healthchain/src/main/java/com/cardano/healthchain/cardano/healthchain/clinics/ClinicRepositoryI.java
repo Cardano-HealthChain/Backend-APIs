@@ -13,4 +13,5 @@ public interface ClinicRepositoryI {
     void updateAdminDetails(ClinicAdminCreateRequest clinicAdminCreateRequest, String clinicId);
     ClinicDataResponse getClinicById(String clinic_id);
     ClinicDataResponse getClinicByEmail(String clinic_email);
+    public ClinicDataResponse getClinicByAdminEmail(String adminEmail);
 }

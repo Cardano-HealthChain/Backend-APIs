@@ -21,7 +21,7 @@ public class ClinicUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //implement later using a clinic repository to load clinics and ensure information is correct
-        ClinicDataResponse clinicData = clinicRepository.getClinicByEmail(username);
+        ClinicDataResponse clinicData = clinicRepository.getClinicByAdminEmail(username);
         return new User(
                 clinicData.getClinic_id().toString(),
                 clinicData.getClinic_admin_password(),

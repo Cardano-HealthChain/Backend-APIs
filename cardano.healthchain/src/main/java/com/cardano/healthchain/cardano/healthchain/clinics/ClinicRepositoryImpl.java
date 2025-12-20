@@ -62,9 +62,15 @@ public class ClinicRepositoryImpl implements ClinicRepositoryI{
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ClinicDataResponse.class), UUID.fromString(clinic_id));
     }
     @Override
-    public ClinicDataResponse getClinicByEmail(String clinic_admin_email) {
+    public ClinicDataResponse getClinicByEmail(String email) {
         String sql = "SELECT * FROM clinics WHERE clinic_email = ? LIMIT 1";
-        Object[] args = new Object[]{clinic_admin_email};
+        Object[] args = new Object[]{email};
         return jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(ClinicDataResponse.class),args);
     }
+    public ClinicDataResponse getClinicByAdminEmail(String adminEmail) {
+        String sql = "SELECT * FROM clinics WHERE clinic_admin_email = ? LIMIT 1";
+        Object[] args = new Object[]{adminEmail};
+        return jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(ClinicDataResponse.class),args);
+    }
+
 }

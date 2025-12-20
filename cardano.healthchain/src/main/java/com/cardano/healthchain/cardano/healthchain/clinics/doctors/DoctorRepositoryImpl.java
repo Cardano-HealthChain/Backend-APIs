@@ -47,7 +47,7 @@ public class DoctorRepositoryImpl implements DoctorRepositoryI{
         return jdbcTemplate.queryForObject(
                 sql,
                 new BeanPropertyRowMapper<>(DoctorDataResponse.class),
-                UUID.fromString(doctorEmail)
+                doctorEmail
         );
     }
     @Override
