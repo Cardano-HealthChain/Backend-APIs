@@ -34,6 +34,7 @@ public class EmailPasswordAuthFilter extends UsernamePasswordAuthenticationFilte
             Map<String, String> requestBody = new ObjectMapper().readValue(request.getInputStream(), Map.class);
             String email = requestBody.get("email");
             String password = requestBody.get("password");
+            System.out.println(email.concat(password));
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
             return authenticationManager.authenticate(authToken);
         } catch (Exception e) {
