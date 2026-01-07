@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.utils;
+package com.cardano.healthchain.cardano.healthchain.security;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;

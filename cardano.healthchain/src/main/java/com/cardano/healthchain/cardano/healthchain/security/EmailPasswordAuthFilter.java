@@ -1,6 +1,5 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
-import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

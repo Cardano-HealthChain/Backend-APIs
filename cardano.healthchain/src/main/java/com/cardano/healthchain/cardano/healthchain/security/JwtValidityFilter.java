@@ -1,7 +1,6 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryImpl;
-import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

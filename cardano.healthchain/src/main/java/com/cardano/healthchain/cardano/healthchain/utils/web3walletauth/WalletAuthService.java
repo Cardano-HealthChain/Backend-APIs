@@ -3,7 +3,7 @@ package com.cardano.healthchain.cardano.healthchain.utils.web3walletauth;
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
-import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
+import com.cardano.healthchain.cardano.healthchain.security.JwtService;
 import com.cardano.healthchain.cardano.healthchain.utils.web3walletauth.dtos.*;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 import org.bouncycastle.crypto.signers.Ed25519Signer;

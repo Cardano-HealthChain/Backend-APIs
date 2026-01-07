@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.auth;
+package com.cardano.healthchain.cardano.healthchain.walletAuth;
 
 import com.cardano.healthchain.cardano.healthchain.utils.web3walletauth.WalletAuthService;
 import com.cardano.healthchain.cardano.healthchain.utils.web3walletauth.dtos.*;

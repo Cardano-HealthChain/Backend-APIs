@@ -37,11 +37,12 @@ public class ClinicController {
         this.doctorService = doctorService;
     }
     @PostMapping("signup")
+    @ResponseStatus(HttpStatus.CREATED)
     public ClinicCreateResponse signup(@RequestBody ClinicCreateRequest clinicCreateRequest){
         return clinicService.signUp(clinicCreateRequest);
     }
     @PostMapping("signup/admin-details")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateAdminDetails(@Valid @RequestBody ClinicAdminCreateRequest clinicAdminCreateRequest, Principal principal){
         clinicService.updateAdminDetails(clinicAdminCreateRequest, principal.getName());
     }
@@ -58,7 +59,7 @@ public class ClinicController {
         return clinicService.getTotalDoctorsUnderClinic(principal.getName());
     }
     @PutMapping("region")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateClinicRegion(Principal principal,@RequestParam String new_region){
         clinicService.updateClinicRegion(principal.getName(), new_region);
     }
@@ -76,7 +77,7 @@ public class ClinicController {
         return notificationService.getNotificationForEntity(principal.getName(),page);
     }
     @PostMapping("create-doctor")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createDoctor(Principal principal, @RequestBody DoctorCreateRequest doctorCreateRequest){
         doctorService.createDoctor(principal.getName(),doctorCreateRequest);
     }

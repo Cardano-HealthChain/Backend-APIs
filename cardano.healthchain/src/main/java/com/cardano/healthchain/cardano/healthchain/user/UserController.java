@@ -41,6 +41,7 @@ public class UserController {
         this.auditService = auditService;
     }
     @PostMapping("signup")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserCreateResponse signup(@Valid @RequestBody UserCreateRequest userCreateRequest){
         return userService.createUserWithEmail(userCreateRequest);
     }
@@ -57,22 +58,22 @@ public class UserController {
         return userService.validateUserOtp(otpcode, user_email);
     }
     @PostMapping("profile/personal_details")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateUserProfileWithPersonalDetails(Principal principal,@Valid @RequestBody UserUpdateProfilePersonalDetailsRequest userUpdateProfilePersonalDetailsRequest){
         userService.updateUserProfileWithPersonalDetails(userUpdateProfilePersonalDetailsRequest,principal.getName());
     }
     @PostMapping("profile/basic_health_information")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateUserProfileWithHealthInformation(Principal principal,@Valid @RequestBody UserUpdateProfileHealthInformationRequest userUpdateProfileHealthInformationRequest){
         userService.updateUserProfileWithHealthInformation(userUpdateProfileHealthInformationRequest,principal.getName());
     }
     @PostMapping("profile/emergency_contact")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateUserProfileWithEmergencyContact(Principal principal,@Valid @RequestBody UserUpdateEmergencyInformationRequest userUpdateEmergencyInformationRequest){
         userService.updateUserProfileWithEmergencyContact(userUpdateEmergencyInformationRequest,principal.getName());
     }
     @PostMapping("profile/location")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateUserProfileWithLocationData(Principal principal,@Valid @RequestBody UserUpdateLocationDataRequest userUpdateLocationDataRequest){
         userService.updateUserProfileWithLocationData(userUpdateLocationDataRequest,principal.getName());
     }
@@ -110,7 +111,7 @@ public class UserController {
     }
     //@Transactional should be in service layer, quick fix later
     @PostMapping("permissions/grant")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @Transactional
     public void grantPermission(Principal principal, @RequestParam String clinicId, @RequestParam String permissionAccess){
         notificationService.insertUserGrantedPermissionForClinic(clinicId,"PERMISSION_GRANTED", NotificationMessages.USER_GRANTED_PERMISSION_TO_CLINIC.getMessage(), NotificationSeverityLevel.high.name(), NotificationTypes.healthUpdates.name());
@@ -119,7 +120,7 @@ public class UserController {
     }
     //@Transactional should be in service layer, quick fix later
     @PostMapping("permissions/revoke")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @Transactional
     public void revokePermissionForUser(Principal principal, @RequestParam String clinicId){
         notificationService.insertUserGrantedPermissionForClinic(clinicId,"PERMISSION_REVOKED", NotificationMessages.USER_REVOKED_PERMISSION_TO_CLINIC.getMessage(), NotificationSeverityLevel.high.name(), NotificationTypes.healthUpdates.name());
@@ -130,7 +131,7 @@ public class UserController {
         return notificationService.getNotificationForEntity(principal.getName(),page);
     }
     @PostMapping("notifications/read")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void markNotificationAsRead(@RequestParam String notificationId){
         notificationService.markNotificationAsRead(notificationId);
     }
@@ -147,6 +148,7 @@ public class UserController {
         return auditService.getAuditsByActorReference(principal.getName(),page);
     }
     @PostMapping("delete")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteAccount(Principal principal){
         userService.deleteAccount(principal.getName());
     }

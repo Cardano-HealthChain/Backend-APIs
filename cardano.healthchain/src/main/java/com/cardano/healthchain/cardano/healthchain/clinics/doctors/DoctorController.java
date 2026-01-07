@@ -5,10 +5,8 @@ import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResp
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataResponse;
 import com.cardano.healthchain.cardano.healthchain.utils.medicalData.dtos.MedicalDataUploadRequest;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -29,18 +27,22 @@ public class DoctorController {
         return userService.getUsersSimilarToSearchTerm(searchTerm,page);
     }
     @PostMapping("request-read-permission")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void doctorRequestPermissionOnBehalfOfClinicRead(Principal principal, @RequestParam String userId){
         permissionService.doctorRequestUserPermissionRead(principal.getName(),userId);
     }
     @PostMapping("request-write-permission")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void doctorRequestPermissionOnBehalfOfClinicWrite(Principal principal, @RequestParam String userId){
         permissionService.doctorRequestUserPermissionWrite(principal.getName(),userId);
     }
     @PostMapping("request-readwrite-permission")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void doctorRequestPermissionOnBehalfOfClinicReadAndWrite(Principal principal, @RequestParam String userId){
         permissionService.doctorRequestUserPermissionReadAndWrite(principal.getName(),userId);
     }
     @PostMapping("upload-record")
+    @ResponseStatus(HttpStatus.CREATED)
     public void doctorUploadRecordForUser(Principal principal, @RequestParam String userId, MedicalDataUploadRequest medicalDataUploadRequest){
         doctorService.doctorUploadRecordForUser(principal.getName(),userId,medicalDataUploadRequest);
     }

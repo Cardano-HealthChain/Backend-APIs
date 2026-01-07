@@ -8,7 +8,7 @@ import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicCreateResp
 import com.cardano.healthchain.cardano.healthchain.clinics.dtos.ClinicDataResponse;
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
 import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
-import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
+import com.cardano.healthchain.cardano.healthchain.security.JwtService;
 import com.cardano.healthchain.cardano.healthchain.utils.blockchain.BlockChainServiceI;
 import com.cardano.healthchain.cardano.healthchain.utils.notifications.NotificationService;
 import com.cardano.healthchain.cardano.healthchain.utils.permissions.PermissionService;

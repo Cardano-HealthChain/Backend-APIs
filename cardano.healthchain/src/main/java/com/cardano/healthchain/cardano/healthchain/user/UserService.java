@@ -2,7 +2,7 @@ package com.cardano.healthchain.cardano.healthchain.user;
 
 import com.cardano.healthchain.cardano.healthchain.user.dtos.*;
 import com.cardano.healthchain.cardano.healthchain.utils.Healthchain_Roles_Enum;
-import com.cardano.healthchain.cardano.healthchain.utils.JwtService;
+import com.cardano.healthchain.cardano.healthchain.security.JwtService;
 import com.cardano.healthchain.cardano.healthchain.utils.audit.enums.ActorTypeEnum;
 import com.cardano.healthchain.cardano.healthchain.utils.audit.AuditService;
 import com.cardano.healthchain.cardano.healthchain.utils.otp.OtpServiceEmailImpl;
