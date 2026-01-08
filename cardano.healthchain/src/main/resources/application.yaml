@@ -1,7 +1,6 @@
 spring:
   datasource:
     url: jdbc:postgresql://dpg-d5feptnpm1nc73dbn090-a/healthchain?user=healthchain_user&password=cWr7FJcKUKZzuN6fx21ZPgxJ1yp3QXfn
-    #    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
     username: healthchain_user
     password: cWr7FJcKUKZzuN6fx21ZPgxJ1yp3QXfn
   application:
