@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.configs;
+package com.cardano.healthchain.cardano.healthchain.configurations;
 
 import com.cardano.healthchain.cardano.healthchain.user.UserRepositoryI;
 import com.cardano.healthchain.cardano.healthchain.user.dtos.UserDataProfileResponse;

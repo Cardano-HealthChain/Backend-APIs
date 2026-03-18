@@ -1,8 +1,8 @@
 package com.cardano.healthchain.cardano.healthchain.security;
 
-import com.cardano.healthchain.cardano.healthchain.configs.ClinicUserDetailsService;
-import com.cardano.healthchain.cardano.healthchain.configs.DoctorUserDetailsService;
-import com.cardano.healthchain.cardano.healthchain.configs.ResidentUserDetailsService;
+import com.cardano.healthchain.cardano.healthchain.configurations.ClinicUserDetailsService;
+import com.cardano.healthchain.cardano.healthchain.configurations.DoctorUserDetailsService;
+import com.cardano.healthchain.cardano.healthchain.configurations.ResidentUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

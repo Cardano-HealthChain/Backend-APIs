@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.configs;
+package com.cardano.healthchain.cardano.healthchain.configurations;
 
 import com.cardano.healthchain.cardano.healthchain.clinics.doctors.DoctorRepositoryI;
 import com.cardano.healthchain.cardano.healthchain.clinics.doctors.dtos.DoctorDataResponse;

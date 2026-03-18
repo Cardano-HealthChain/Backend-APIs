@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.configs;
+package com.cardano.healthchain.cardano.healthchain.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

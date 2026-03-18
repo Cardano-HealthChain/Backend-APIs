@@ -1,4 +1,4 @@
-package com.cardano.healthchain.cardano.healthchain.configs;
+package com.cardano.healthchain.cardano.healthchain.configurations;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
